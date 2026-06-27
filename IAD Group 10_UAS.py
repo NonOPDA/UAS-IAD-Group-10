@@ -227,12 +227,19 @@ def sql_join_data(
 
         mm.Nama_Mesin,
         mm.Line_Produksi,
+        mm.Tipe_Mesin,
+        mm.Kapasitas_Max_RPM,
+        mm.Lokasi_Pabrik,
 
         op.Nama_Operator,
         op.Skill_Level,
+        op.Departemen,
 
         mt.Nama_Material,
-        mt.Jenis AS Jenis_Material
+        mt.Kategori,
+        mt.Satuan,
+        mt.Supplier,
+        mt.Harga_Per_Unit
 
     FROM tr_produksi tp
 
@@ -808,19 +815,32 @@ quality = calculate_quality(
 # Jika belum tersedia pada dataset,
 # gunakan nilai default
 
-availability = 0.95
+planned_time = df["Durasi_Jam"].sum()
 
-performance = 0.90
+downtime = (
+    maintenance["Durasi_Downtime_Menit"].sum()
+    / 60
+)
 
+operating_time = planned_time - downtime
+
+availability = operating_time / planned_time
+
+performance = (
+    df["Setting_Speed_RPM"].mean()
+    /
+    df["Kapasitas_Max_RPM"].mean()
+)
+
+quality = calculate_quality(
+    total_ok,
+    total_ng
+)
 
 oee = calculate_oee(
-
     availability,
-
     performance,
-
     quality
-
 )
 
 
@@ -888,27 +908,18 @@ col5.metric(
 )
 
 col6.metric(
-
-    "Average RPM",
-
-    f"{avg_rpm:.0f}"
-
+    "Availability",
+    f"{availability*100:.2f}%"
 )
 
 col7.metric(
-
-    "Average Temperature",
-
-    f"{avg_temp:.1f} °C"
-
+    "Performance",
+    f"{performance*100:.2f}%"
 )
 
 col8.metric(
-
-    "Machine",
-
-    jumlah_mesin
-
+    "Quality",
+    f"{quality*100:.2f}%"
 )
 
 
@@ -1431,7 +1442,9 @@ with tab2:
 
                 maintenance
 
-                .groupby("ID_Mesin")["Durasi_Jam"]
+                .groupby("ID_Mesin")[
+                    "Durasi_Downtime_Menit"
+                ]
 
                 .sum()
 
@@ -1457,11 +1470,11 @@ with tab2:
 
                 x="Nama_Mesin",
 
-                y="Durasi_Jam",
+                y="Durasi_Downtime_Menit",
 
                 color="Durasi_Jam",
 
-                title="Total Downtime Mesin"
+                title="Total Downtime Mesin (Menit)"
 
             )
 
