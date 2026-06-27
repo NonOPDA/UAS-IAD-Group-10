@@ -1,13 +1,12 @@
 """
 ===========================================================
 DASHBOARD ANALITIK PRODUKSI
-Project UAS - Intelligent Analytics Dashboard
+Project UAS Group 10 - Intelligent Analytics Dashboard
 
 Fase 1 : Data Acquisition & Data Cleaning
 Fase 2 : Statistical Analysis & Executive Dashboard
 Fase 3 : Machine Learning Prediction
 
-Author : Nama Anda
 ===========================================================
 """
 
@@ -1463,6 +1462,9 @@ with tab2:
                 how="left"
 
             )
+
+            # Hitung Durasi_Jam dari Durasi_Downtime_Menit
+            downtime["Durasi_Jam"] = downtime["Durasi_Downtime_Menit"] / 60
 
             fig = px.bar(
 
