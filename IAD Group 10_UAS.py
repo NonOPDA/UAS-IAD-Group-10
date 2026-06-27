@@ -1,7 +1,7 @@
 """
 ===========================================================
 DASHBOARD ANALITIK PRODUKSI
-Project UAS Group 10 - Intelligent Analytics Dashboard
+Project UAS - Intelligent Analytics Dashboard
 
 Fase 1 : Data Acquisition & Data Cleaning
 Fase 2 : Statistical Analysis & Executive Dashboard
@@ -495,12 +495,16 @@ def data_quality_report(report):
 def save_clean_data(df):
     """
     Menyimpan data hasil cleaning.
+    Gagal secara diam-diam jika filesystem read-only
+    (misalnya di Streamlit Cloud).
     """
 
-    df.to_csv(
-        "pt_andalas_cleaned.csv",
-        index=False
-    )
+    for path in ["/tmp/pt_andalas_cleaned.csv", "pt_andalas_cleaned.csv"]:
+        try:
+            df.to_csv(path, index=False)
+            return
+        except Exception:
+            continue
 
 
 # ---------------------------------------------------------
@@ -814,22 +818,41 @@ quality = calculate_quality(
 # Jika belum tersedia pada dataset,
 # gunakan nilai default
 
-planned_time = df["Durasi_Jam"].sum()
+if "Durasi_Jam" in df.columns and df["Durasi_Jam"].sum() > 0:
 
-downtime = (
-    maintenance["Durasi_Downtime_Menit"].sum()
-    / 60
-)
+    planned_time    = df["Durasi_Jam"].sum()
 
-operating_time = planned_time - downtime
+    downtime_hours  = (
+        maintenance["Durasi_Downtime_Menit"].sum() / 60
+        if not maintenance.empty else 0
+    )
 
-availability = operating_time / planned_time
+    operating_time  = max(planned_time - downtime_hours, 0)
 
-performance = (
-    df["Setting_Speed_RPM"].mean()
-    /
-    df["Kapasitas_Max_RPM"].mean()
-)
+    availability    = calculate_availability(
+        operating_time,
+        planned_time
+    )
+
+else:
+
+    planned_time   = 0
+    availability   = 1.0
+
+
+if (
+    "Kapasitas_Max_RPM" in df.columns
+    and df["Kapasitas_Max_RPM"].mean() > 0
+):
+
+    performance = calculate_performance(
+        df["Setting_Speed_RPM"].mean(),
+        df["Kapasitas_Max_RPM"].mean()
+    )
+
+else:
+
+    performance = 1.0
 
 quality = calculate_quality(
     total_ok,
@@ -2062,3 +2085,425 @@ Hasil analisis ini menjadi dasar dalam menyusun rekomendasi pada fase
 Machine Learning dan Executive Summary.
 
 """)
+
+# =========================================================
+# BAGIAN 12 - FASE 3
+# MACHINE LEARNING
+# =========================================================
+
+with tab4:
+
+    st.subheader("🤖 Machine Learning - Prediksi Reject Produksi")
+
+    st.markdown("---")
+
+    # ---------------------------------------------------------
+    # Feature Engineering
+    # ---------------------------------------------------------
+
+    df_ml = df_clean.copy()
+
+    # Target : apakah ada produk NG (reject)
+    df_ml["Reject_Label"] = (df_ml["Qty_NG"] > 0).astype(int)
+
+    # Encode kolom kategorikal
+    cat_encode_cols = [
+        "Shift",
+        "Tipe_Mesin",
+        "Nama_Mesin",
+        "Nama_Operator"
+    ]
+
+    le_dict = {}
+
+    for col in cat_encode_cols:
+        if col in df_ml.columns:
+            le = LabelEncoder()
+            df_ml[col + "_enc"] = le.fit_transform(
+                df_ml[col].astype(str)
+            )
+            le_dict[col] = le
+
+    # Fitur numerik
+    num_features = [
+        "Setting_Speed_RPM",
+        "Suhu_Mesin_Celsius",
+        "Qty_OK",
+        "Skill_Level"
+    ]
+
+    enc_features = [
+        col + "_enc"
+        for col in cat_encode_cols
+        if col in df_ml.columns
+    ]
+
+    all_features = [
+        f for f in num_features + enc_features
+        if f in df_ml.columns
+    ]
+
+    # Bersihkan baris dengan NaN
+    df_ml_ready = df_ml[
+        all_features + ["Reject_Label"]
+    ].dropna()
+
+    X = df_ml_ready[all_features]
+    y = df_ml_ready["Reject_Label"]
+
+    # ---------------------------------------------------------
+    # Validasi Data
+    # ---------------------------------------------------------
+
+    if len(df_ml_ready) < 50:
+
+        st.warning(
+            f"Data terlalu sedikit ({len(df_ml_ready)} baris) untuk melatih model. "
+            "Minimal diperlukan 50 baris."
+        )
+
+    elif y.nunique() < 2:
+
+        st.warning(
+            "Data hanya memiliki satu kelas (semua OK atau semua Reject). "
+            "Model tidak dapat dilatih."
+        )
+
+    else:
+
+        # Distribusi kelas
+        st.markdown("### Distribusi Kelas Target")
+
+        class_dist = y.value_counts().reset_index()
+        class_dist.columns = ["Kelas", "Jumlah"]
+        class_dist["Kelas"] = class_dist["Kelas"].map(
+            {0: "OK (0)", 1: "Reject (1)"}
+        )
+
+        fig_dist = px.bar(
+            class_dist,
+            x="Kelas",
+            y="Jumlah",
+            color="Kelas",
+            title="Distribusi Label Reject"
+        )
+
+        st.plotly_chart(
+            fig_dist,
+            use_container_width=True
+        )
+
+        # ---------------------------------------------------------
+        # Pilihan Model
+        # ---------------------------------------------------------
+
+        st.markdown("### Konfigurasi Model")
+
+        model_pilihan = st.selectbox(
+            "Pilih Model Machine Learning",
+            ["Random Forest", "Logistic Regression"]
+        )
+
+        test_size = st.slider(
+            "Proporsi Data Test",
+            min_value=0.1,
+            max_value=0.4,
+            value=0.2,
+            step=0.05
+        )
+
+        # ---------------------------------------------------------
+        # Pelatihan Model
+        # ---------------------------------------------------------
+
+        # Train-test split
+        X_train, X_test, y_train, y_test = train_test_split(
+            X,
+            y,
+            test_size=test_size,
+            random_state=42,
+            stratify=y
+        )
+
+        # Imputasi missing value
+        imputer = SimpleImputer(strategy="median")
+        X_train_imp = imputer.fit_transform(X_train)
+        X_test_imp  = imputer.transform(X_test)
+
+        # Inisialisasi model
+        if model_pilihan == "Random Forest":
+            model = RandomForestClassifier(
+                n_estimators=100,
+                random_state=42
+            )
+        else:
+            model = LogisticRegression(
+                max_iter=500,
+                random_state=42
+            )
+
+        model.fit(X_train_imp, y_train)
+
+        y_pred = model.predict(X_test_imp)
+        y_prob = model.predict_proba(X_test_imp)[:, 1]
+
+        # ---------------------------------------------------------
+        # Metrik Evaluasi
+        # ---------------------------------------------------------
+
+        st.markdown("---")
+
+        st.markdown("### Metrik Evaluasi")
+
+        acc  = accuracy_score(y_test, y_pred)
+        prec = precision_score(y_test, y_pred, zero_division=0)
+        rec  = recall_score(y_test, y_pred, zero_division=0)
+        f1   = f1_score(y_test, y_pred, zero_division=0)
+        auc  = roc_auc_score(y_test, y_prob)
+
+        c1, c2, c3, c4, c5 = st.columns(5)
+
+        c1.metric("Accuracy",  f"{acc:.3f}")
+        c2.metric("Precision", f"{prec:.3f}")
+        c3.metric("Recall",    f"{rec:.3f}")
+        c4.metric("F1-Score",  f"{f1:.3f}")
+        c5.metric("AUC-ROC",   f"{auc:.3f}")
+
+        # ---------------------------------------------------------
+        # Confusion Matrix
+        # ---------------------------------------------------------
+
+        st.markdown("---")
+
+        st.markdown("### Confusion Matrix")
+
+        cm = confusion_matrix(y_test, y_pred)
+
+        fig_cm = px.imshow(
+
+            cm,
+
+            text_auto=True,
+
+            labels=dict(x="Prediksi", y="Aktual"),
+
+            x=["OK (0)", "Reject (1)"],
+
+            y=["OK (0)", "Reject (1)"],
+
+            color_continuous_scale="Blues",
+
+            title="Confusion Matrix"
+
+        )
+
+        st.plotly_chart(
+            fig_cm,
+            use_container_width=True
+        )
+
+        # ---------------------------------------------------------
+        # ROC Curve
+        # ---------------------------------------------------------
+
+        st.markdown("---")
+
+        st.markdown("### ROC Curve")
+
+        fpr, tpr, _ = roc_curve(y_test, y_prob)
+
+        fig_roc = go.Figure()
+
+        fig_roc.add_trace(
+            go.Scatter(
+                x=fpr,
+                y=tpr,
+                mode="lines",
+                name=f"ROC (AUC = {auc:.3f})"
+            )
+        )
+
+        fig_roc.add_trace(
+            go.Scatter(
+                x=[0, 1],
+                y=[0, 1],
+                mode="lines",
+                name="Baseline",
+                line=dict(dash="dash", color="gray")
+            )
+        )
+
+        fig_roc.update_layout(
+            title="ROC Curve",
+            xaxis_title="False Positive Rate",
+            yaxis_title="True Positive Rate"
+        )
+
+        st.plotly_chart(
+            fig_roc,
+            use_container_width=True
+        )
+
+        # ---------------------------------------------------------
+        # Feature Importance (Random Forest)
+        # ---------------------------------------------------------
+
+        if model_pilihan == "Random Forest":
+
+            st.markdown("---")
+
+            st.markdown("### Feature Importance")
+
+            importance_df = pd.DataFrame({
+
+                "Fitur": all_features,
+
+                "Importance": model.feature_importances_
+
+            }).sort_values("Importance", ascending=False)
+
+            fig_imp = px.bar(
+
+                importance_df,
+
+                x="Fitur",
+
+                y="Importance",
+
+                color="Importance",
+
+                title="Feature Importance - Random Forest"
+
+            )
+
+            st.plotly_chart(
+                fig_imp,
+                use_container_width=True
+            )
+
+        # ---------------------------------------------------------
+        # Classification Report
+        # ---------------------------------------------------------
+
+        st.markdown("---")
+
+        st.markdown("### Classification Report")
+
+        report_text = classification_report(
+            y_test,
+            y_pred,
+            target_names=["OK", "Reject"]
+        )
+
+        st.code(report_text)
+
+        # ---------------------------------------------------------
+        # Info Pelatihan
+        # ---------------------------------------------------------
+
+        st.markdown("---")
+
+        st.info(f"""
+
+**Model:** {model_pilihan}
+
+**Jumlah data pelatihan:** {len(X_train):,} baris
+
+**Jumlah data pengujian:** {len(X_test):,} baris
+
+**Fitur yang digunakan:** {", ".join(all_features)}
+
+**Target:** Qty_NG > 0 → Reject (1), OK (0)
+
+""")
+
+# =========================================================
+# BAGIAN 13
+# RAW DATA
+# =========================================================
+
+with tab5:
+
+    st.subheader("📄 Raw Data - Data Produksi Bersih")
+
+    st.markdown("---")
+
+    # ---------------------------------------------------------
+    # Info Dataset
+    # ---------------------------------------------------------
+
+    c1, c2, c3 = st.columns(3)
+
+    c1.metric("Total Baris", f"{len(df_clean):,}")
+    c2.metric("Total Kolom", f"{len(df_clean.columns):,}")
+    c3.metric(
+        "Rentang Tanggal",
+        f"{df_clean['Tanggal'].min().date()} – {df_clean['Tanggal'].max().date()}"
+        if "Tanggal" in df_clean.columns else "N/A"
+    )
+
+    st.markdown("---")
+
+    # ---------------------------------------------------------
+    # Tabel Data
+    # ---------------------------------------------------------
+
+    st.markdown("### Tabel Data Lengkap")
+
+    st.dataframe(
+        df_clean,
+        use_container_width=True,
+        hide_index=True
+    )
+
+    # ---------------------------------------------------------
+    # Download
+    # ---------------------------------------------------------
+
+    csv_data = df_clean.to_csv(index=False).encode("utf-8")
+
+    st.download_button(
+
+        label="⬇️ Download Data CSV",
+
+        data=csv_data,
+
+        file_name="data_produksi_clean.csv",
+
+        mime="text/csv"
+
+    )
+
+    # ---------------------------------------------------------
+    # Statistik Deskriptif
+    # ---------------------------------------------------------
+
+    st.markdown("---")
+
+    st.markdown("### Statistik Deskriptif")
+
+    st.dataframe(
+        df_clean.describe().round(2),
+        use_container_width=True
+    )
+
+    # ---------------------------------------------------------
+    # Tipe Data
+    # ---------------------------------------------------------
+
+    st.markdown("---")
+
+    st.markdown("### Tipe Data Kolom")
+
+    dtype_df = pd.DataFrame({
+        "Kolom": df_clean.dtypes.index,
+        "Tipe Data": df_clean.dtypes.astype(str).values,
+        "Nilai Null": df_clean.isnull().sum().values,
+        "Nilai Unik": [df_clean[col].nunique() for col in df_clean.columns]
+    })
+
+    st.dataframe(
+        dtype_df,
+        use_container_width=True,
+        hide_index=True
+    )
