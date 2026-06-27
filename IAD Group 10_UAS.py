@@ -1872,7 +1872,17 @@ with tab3:
 
     st.markdown("### 1. Uji Chi-Square")
 
-    if "Skill_Level" in df_shift_b.columns:
+    if df_shift_b.empty:
+
+        st.warning("Data Shift B tidak tersedia untuk analisis statistik.")
+
+    elif "Skill_Level" not in df_shift_b.columns:
+
+        st.warning(
+            "Kolom Skill_Level tidak ditemukan."
+        )
+
+    else:
 
         contingency = pd.crosstab(
 
@@ -1882,39 +1892,41 @@ with tab3:
 
         )
 
-        chi2, p_value, dof, expected = chi2_contingency(
-            contingency
-        )
+        if contingency.size == 0:
 
-        c1, c2 = st.columns(2)
-
-        c1.metric(
-            "Chi-Square",
-            f"{chi2:.3f}"
-        )
-
-        c2.metric(
-            "p-value",
-            f"{p_value:.4f}"
-        )
-
-        if p_value < 0.05:
-
-            st.success(
-                "Terdapat hubungan yang signifikan (p < 0.05)."
+            st.warning(
+                "Data tidak cukup untuk menjalankan uji Chi-Square."
             )
 
         else:
 
-            st.info(
-                "Tidak terdapat hubungan yang signifikan (p ≥ 0.05)."
+            chi2, p_value, dof, expected = chi2_contingency(
+                contingency
             )
 
-    else:
+            c1, c2 = st.columns(2)
 
-        st.warning(
-            "Kolom Skill_Level tidak ditemukan."
-        )
+            c1.metric(
+                "Chi-Square",
+                f"{chi2:.3f}"
+            )
+
+            c2.metric(
+                "p-value",
+                f"{p_value:.4f}"
+            )
+
+            if p_value < 0.05:
+
+                st.success(
+                    "Terdapat hubungan yang signifikan (p < 0.05)."
+                )
+
+            else:
+
+                st.info(
+                    "Tidak terdapat hubungan yang signifikan (p ≥ 0.05)."
+                )
 
 
     # -----------------------------------------------------
