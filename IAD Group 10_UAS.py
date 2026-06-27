@@ -1,394 +1,2037 @@
 """
-Dashboard Analitik Produksi - Streamlit App
-Versi Final - Memenuhi Fase 2 & Fase 3
+===========================================================
+DASHBOARD ANALITIK PRODUKSI
+Project UAS - Intelligent Analytics Dashboard
+
+Fase 1 : Data Acquisition & Data Cleaning
+Fase 2 : Statistical Analysis & Executive Dashboard
+Fase 3 : Machine Learning Prediction
+
+Author : Nama Anda
+===========================================================
 """
 
+# =========================================================
+# BAGIAN 1 - PERSIAPAN I
+# IMPORT LIBRARY
+# =========================================================
+
+# Dashboard
 import streamlit as st
+
+# Data Processing
 import pandas as pd
-import sqlite3
 import numpy as np
+import sqlite3
+
+# Visualization
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from scipy.stats import chi2_contingency
+
+# Statistical Analysis
+from scipy.stats import (
+    chi2_contingency,
+    f_oneway,
+    kruskal,
+    zscore
+)
+
+# Machine Learning
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.linear_model import LogisticRegression
 
-# ─────────────────────────────────────────────
-# PAGE CONFIG
-# ─────────────────────────────────────────────
+# Model Evaluation
+from sklearn.metrics import (
+    classification_report,
+    confusion_matrix,
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    roc_curve,
+    roc_auc_score,
+    precision_recall_curve
+)
+
+# Data Preprocessing
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import LabelEncoder
+
+import warnings
+warnings.filterwarnings("ignore")
+
+
+# =========================================================
+# BAGIAN 2 - PERSIAPAN II
+# KONFIGURASI DASHBOARD
+# =========================================================
+
 st.set_page_config(
     page_title="Dashboard Analitik Produksi",
     page_icon="🏭",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="expanded"
 )
 
-# ─────────────────────────────────────────────
-# CUSTOM CSS
-# ─────────────────────────────────────────────
+# ---------------------------------------------------------
+# Custom CSS
+# ---------------------------------------------------------
+
 st.markdown("""
 <style>
-    /* Background & font */
-    .stApp { background-color: #0f1117; }
-    html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 
-    /* Metric cards */
-    div[data-testid="metric-container"] {
-        background: linear-gradient(135deg, #1e2130, #252840);
-        border: 1px solid #2e3250;
-        border-radius: 12px;
-        padding: 16px 20px;
-    }
-    div[data-testid="metric-container"] label { color: #8b90a8 !important; font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; }
-    div[data-testid="metric-container"] [data-testid="stMetricValue"] { color: #e8eaf6 !important; font-size: 2rem; font-weight: 700; }
-    div[data-testid="metric-container"] [data-testid="stMetricDelta"] { color: #66bb6a !important; }
+.main{
+    background-color:#f5f7fa;
+}
 
-    /* Section headers */
-    .section-header {
-        font-size: 0.7rem;
-        font-weight: 700;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        color: #5c6bc0;
-        margin: 32px 0 12px 0;
-        border-left: 3px solid #5c6bc0;
-        padding-left: 10px;
-    }
+h1{
+    color:#003366;
+}
 
-    /* Alert / info box */
-    .stat-badge {
-        background: #1a1f3c;
-        border: 1px solid #3f51b5;
-        border-radius: 8px;
-        padding: 14px 18px;
-        font-size: 0.9rem;
-        color: #c5cae9;
-        margin-bottom: 10px;
-    }
-    .stat-badge strong { color: #7986cb; }
+h2{
+    color:#0b5394;
+}
 
-    /* Sidebar */
-    section[data-testid="stSidebar"] { background-color: #12151f; border-right: 1px solid #1e2130; }
-    section[data-testid="stSidebar"] .stSelectbox label,
-    section[data-testid="stSidebar"] .stMultiSelect label { color: #8b90a8; font-size: 0.82rem; }
+div[data-testid="metric-container"]{
+    background:white;
+    border:1px solid #d9d9d9;
+    padding:15px;
+    border-radius:10px;
+}
 
-    /* Tabs */
-    .stTabs [role="tab"] { color: #8b90a8; font-weight: 500; }
-    .stTabs [role="tab"][aria-selected="true"] { color: #7986cb; border-bottom-color: #7986cb; }
-
-    h1 { color: #e8eaf6 !important; font-size: 1.8rem !important; font-weight: 800 !important; }
-    h2 { color: #c5cae9 !important; font-size: 1.25rem !important; font-weight: 600 !important; }
-    h3 { color: #9fa8da !important; font-size: 1rem !important; }
-    p, li { color: #8b90a8; }
 </style>
 """, unsafe_allow_html=True)
 
-# ─────────────────────────────────────────────
-# HELPER: PLOTLY DARK THEME
-# ─────────────────────────────────────────────
-DARK_LAYOUT = dict(
-    paper_bgcolor="#12151f",
-    plot_bgcolor="#0f1117",
-    font=dict(color="#c5cae9", family="Inter"),
-    xaxis=dict(gridcolor="#1e2130", zerolinecolor="#1e2130"),
-    yaxis=dict(gridcolor="#1e2130", zerolinecolor="#1e2130"),
-    margin=dict(l=40, r=20, t=40, b=40),
-)
+# ---------------------------------------------------------
+# Konstanta
+# ---------------------------------------------------------
 
-# ─────────────────────────────────────────────
-# DATA LOADING & CACHING
-# ─────────────────────────────────────────────
-@st.cache_data(show_spinner="Memuat dan membersihkan data...")
-def load_and_clean_data():
-    """Phase 1 – ELT Pipeline (dari notebook sel 1 & 2)."""
-    df_produksi  = pd.read_csv("tr_produksi.csv")
-    df_mesin     = pd.read_csv("ms_mesin.csv")
-    df_operator  = pd.read_csv("ms_operator.csv")
+TEMPERATURE_MIN = 20
+TEMPERATURE_MAX = 200
 
-    conn = sqlite3.connect(":memory:")
-    df_produksi.to_sql("tr_produksi",  conn, index=False, if_exists="replace")
-    df_mesin.to_sql("ms_mesin",        conn, index=False, if_exists="replace")
-    df_operator.to_sql("ms_operator",  conn, index=False, if_exists="replace")
+RPM_MIN = 500
+RPM_MAX = 3000
 
-    query_cleaning = """
-    WITH Joined_Data AS (
-        SELECT
-            tp.ID_Produksi, tp.Tanggal, TRIM(UPPER(tp.Shift)) AS Shift, tp.ID_Mesin,
-            COALESCE(tp.ID_Operator, 'OP-UNKNOWN') AS ID_Operator,
-            tp.Qty_OK, tp.Qty_NG,
-            tp.Setting_Speed_RPM, tp.Suhu_Mesin_Celsius, tp.Durasi_Jam,
-            TRIM(UPPER(mm.Nama_Mesin)) AS Nama_Mesin,
-            TRIM(UPPER(mm.Line_Produksi)) AS Line_Produksi,
-            mo.Skill_Level,
-            COALESCE(TRIM(UPPER(mo.Nama_Operator)), 'UNKNOWN OPERATOR') AS Nama_Operator
-        FROM tr_produksi tp
-        LEFT JOIN ms_mesin mm ON tp.ID_Mesin = mm.ID_Mesin
-        LEFT JOIN ms_operator mo ON tp.ID_Operator = mo.ID_Operator
-        WHERE tp.Suhu_Mesin_Celsius >= 0 OR tp.Suhu_Mesin_Celsius IS NULL
-    ),
-    Imputed_Data AS (
-        SELECT *,
-            COALESCE(Skill_Level,
-                (SELECT CAST(ROUND(AVG(Skill_Level)) AS INT) FROM ms_operator)
-            ) AS Clean_Skill_Level,
-            COALESCE(Suhu_Mesin_Celsius, (
-                SELECT ROUND(AVG(Suhu_Mesin_Celsius), 2)
-                FROM tr_produksi t2
-                WHERE t2.ID_Mesin = Joined_Data.ID_Mesin
-                  AND t2.Suhu_Mesin_Celsius >= 0
-            )) AS Clean_Suhu_Mesin
-        FROM Joined_Data
-    ),
-    Deduplicated_Data AS (
-        SELECT *, ROW_NUMBER() OVER(
-            PARTITION BY ID_Produksi, Tanggal, ID_Mesin ORDER BY ID_Produksi
-        ) AS row_num
-        FROM Imputed_Data
-    )
-    SELECT
-        ID_Produksi, Tanggal, Shift, ID_Mesin, Nama_Mesin, Line_Produksi,
-        ID_Operator, Nama_Operator, Clean_Skill_Level AS Skill_Level,
-        Qty_OK, Qty_NG, Setting_Speed_RPM, Clean_Suhu_Mesin AS Suhu_Mesin_Celsius
-    FROM Deduplicated_Data
-    WHERE row_num = 1
-    ORDER BY Tanggal, ID_Produksi;
+OUTLIER_METHOD = "IQR"
+
+# ---------------------------------------------------------
+# Helper Function
+# ---------------------------------------------------------
+
+def calculate_reject_rate(ok, ng):
+    total = ok + ng
+    if total == 0:
+        return 0
+    return (ng / total) * 100
+
+
+def calculate_quality(ok, ng):
+    total = ok + ng
+    if total == 0:
+        return 0
+    return ok / total
+
+
+def calculate_availability(runtime, planned):
+    if planned == 0:
+        return 0
+    return runtime / planned
+
+
+def calculate_performance(actual_output, ideal_output):
+    if ideal_output == 0:
+        return 0
+    return actual_output / ideal_output
+
+
+def calculate_oee(availability, performance, quality):
+    return availability * performance * quality
+# =========================================================
+# BAGIAN 3 - FASE 1
+# DATA ACQUISITION
+# =========================================================
+
+@st.cache_data(show_spinner="Membaca dataset...")
+def load_raw_data():
+    """
+    Membaca seluruh dataset mentah.
     """
 
-    df = pd.read_sql_query(query_cleaning, conn)
-    df["Tanggal"] = pd.to_datetime(df["Tanggal"])
-    conn.close()
-    return df
+    produksi = pd.read_csv("tr_produksi.csv")
+    mesin = pd.read_csv("ms_mesin.csv")
+    operator = pd.read_csv("ms_operator.csv")
+    material = pd.read_csv("ms_material.csv")
+    maintenance = pd.read_csv("tr_maintenance.csv")
 
-@st.cache_data(show_spinner="Melatih model prediktif...")
-def train_ml_model(_df_clean):
-    """Phase 2 – ML Pipeline (dari notebook sel 4)."""
-    df_maint = pd.read_csv("tr_maintenance.csv")
-    df_maint["Tanggal"] = pd.to_datetime(df_maint["Tanggal"])
-
-    breakdowns = (
-        df_maint[df_maint["Jenis_Maintenance"] == "Breakdown"][["Tanggal", "ID_Mesin"]]
-        .drop_duplicates()
+    return (
+        produksi,
+        mesin,
+        operator,
+        material,
+        maintenance
     )
-    breakdowns["Machine_Failure"] = 1
 
-    df_ml = pd.merge(_df_clean, breakdowns, on=["Tanggal", "ID_Mesin"], how="left")
-    df_ml["Machine_Failure"] = df_ml["Machine_Failure"].fillna(0).astype(int)
 
-    X = df_ml[["Setting_Speed_RPM", "Suhu_Mesin_Celsius", "Skill_Level"]]
-    y = df_ml["Machine_Failure"]
+# ---------------------------------------------------------
+# SQL JOIN
+# ---------------------------------------------------------
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+@st.cache_data(show_spinner="Menggabungkan data menggunakan SQL JOIN...")
+def sql_join_data(
+    produksi,
+    mesin,
+    operator,
+    material
+):
+    """
+    Menggabungkan data produksi dengan seluruh master data
+    menggunakan SQL JOIN.
+    """
 
-    model = RandomForestClassifier(n_estimators=100, random_state=42, class_weight="balanced")
-    model.fit(X_train, y_train)
+    conn = sqlite3.connect(":memory:")
 
-    y_pred = model.predict(X_test)
-    report = classification_report(y_test, y_pred, output_dict=True)
-    cm = confusion_matrix(y_test, y_pred)
-    importances = pd.Series(model.feature_importances_, index=X.columns).sort_values(ascending=False)
+    produksi.to_sql(
+        "tr_produksi",
+        conn,
+        index=False,
+        if_exists="replace"
+    )
 
-    return model, report, cm, importances, df_ml
+    mesin.to_sql(
+        "ms_mesin",
+        conn,
+        index=False,
+        if_exists="replace"
+    )
 
-# ─────────────────────────────────────────────
-# SIDEBAR
-# ─────────────────────────────────────────────
-with st.sidebar:
-    st.markdown("## 🏭 Filter Data")
-    st.divider()
+    operator.to_sql(
+        "ms_operator",
+        conn,
+        index=False,
+        if_exists="replace"
+    )
 
-    try:
-        df_clean = load_and_clean_data()
-        data_ok = True
-    except FileNotFoundError as e:
-        data_ok = False
-        missing = str(e)
+    material.to_sql(
+        "ms_material",
+        conn,
+        index=False,
+        if_exists="replace"
+    )
 
-    if data_ok:
-        shifts = ["Semua"] + sorted(df_clean["Shift"].dropna().unique().tolist())
-        sel_shift = st.selectbox("Shift", shifts)
+    query = """
+    SELECT
 
-        lines = ["Semua"] + sorted(df_clean["Line_Produksi"].dropna().unique().tolist())
-        sel_line = st.selectbox("Line Produksi", lines)
+        tp.*,
 
-        date_min = df_clean["Tanggal"].min().date()
-        date_max = df_clean["Tanggal"].max().date()
-        sel_dates = st.date_input("Rentang Tanggal", value=(date_min, date_max), min_value=date_min, max_value=date_max)
+        mm.Nama_Mesin,
+        mm.Line_Produksi,
 
-        st.divider()
-        st.caption(f"Total baris data bersih: **{len(df_clean):,}**")
-        st.caption(f"Periode: {date_min} – {date_max}")
+        op.Nama_Operator,
+        op.Skill_Level,
 
-# ─────────────────────────────────────────────
-# ERROR STATE – CSV TIDAK DITEMUKAN
-# ─────────────────────────────────────────────
+        mt.Nama_Material,
+        mt.Jenis AS Jenis_Material
+
+    FROM tr_produksi tp
+
+    LEFT JOIN ms_mesin mm
+        ON tp.ID_Mesin = mm.ID_Mesin
+
+    LEFT JOIN ms_operator op
+        ON tp.ID_Operator = op.ID_Operator
+
+    LEFT JOIN ms_material mt
+        ON tp.ID_Material = mt.ID_Material
+
+    ORDER BY
+        tp.Tanggal,
+        tp.ID_Produksi
+
+    """
+
+    df = pd.read_sql_query(
+        query,
+        conn
+    )
+
+    conn.close()
+
+    return df
+# =========================================================
+# BAGIAN 4 - FASE 1
+# DATA CLEANING
+# =========================================================
+
+@st.cache_data(show_spinner="Membersihkan data...")
+def clean_data(df):
+    """
+    Membersihkan data produksi hasil SQL JOIN.
+    """
+
+    report = {}
+
+    # --------------------------------------------
+    # Data sebelum cleaning
+    # --------------------------------------------
+
+    report["Jumlah Data Awal"] = len(df)
+
+    # --------------------------------------------
+    # Menghapus duplikasi
+    # --------------------------------------------
+
+    duplicate = df.duplicated().sum()
+
+    report["Duplicate"] = duplicate
+
+    df = df.drop_duplicates()
+
+    # --------------------------------------------
+    # Missing Value
+    # --------------------------------------------
+
+    report["Missing Value"] = df.isnull().sum().sum()
+
+    # Kolom numerik
+
+    numeric_columns = df.select_dtypes(include=np.number).columns
+
+    for col in numeric_columns:
+        df[col] = df[col].fillna(df[col].median())
+
+    # Kolom kategori
+
+    categorical_columns = df.select_dtypes(include="object").columns
+
+    for col in categorical_columns:
+        df[col] = df[col].fillna("UNKNOWN")
+
+    # --------------------------------------------
+    # Konversi Tipe Data
+    # --------------------------------------------
+
+    if "Tanggal" in df.columns:
+        df["Tanggal"] = pd.to_datetime(
+    df["Tanggal"],
+    errors="coerce"
+)
+
+    numeric_convert = [
+
+        "Qty_OK",
+
+        "Qty_NG",
+
+        "Setting_Speed_RPM",
+
+        "Suhu_Mesin_Celsius",
+
+        "Skill_Level"
+
+    ]
+
+    for col in numeric_convert:
+
+        if col in df.columns:
+
+            df[col] = pd.to_numeric(
+                df[col],
+                errors="coerce"
+            )
+
+    # --------------------------------------------
+    # Validasi Suhu Mesin
+    # --------------------------------------------
+
+    invalid_temperature = (
+
+        (df["Suhu_Mesin_Celsius"] < TEMPERATURE_MIN)
+
+        |
+
+        (df["Suhu_Mesin_Celsius"] > TEMPERATURE_MAX)
+
+    ).sum()
+
+    report["Invalid Temperature"] = invalid_temperature
+
+    df.loc[
+        df["Suhu_Mesin_Celsius"] < TEMPERATURE_MIN,
+        "Suhu_Mesin_Celsius"
+    ] = np.nan
+
+    df.loc[
+        df["Suhu_Mesin_Celsius"] > TEMPERATURE_MAX,
+        "Suhu_Mesin_Celsius"
+    ] = np.nan
+
+    df["Suhu_Mesin_Celsius"] = df[
+        "Suhu_Mesin_Celsius"
+    ].fillna(
+        df["Suhu_Mesin_Celsius"].median()
+    )
+
+    # --------------------------------------------
+    # Validasi RPM
+    # --------------------------------------------
+
+    invalid_rpm = (
+
+        (df["Setting_Speed_RPM"] < RPM_MIN)
+
+        |
+
+        (df["Setting_Speed_RPM"] > RPM_MAX)
+
+    ).sum()
+
+    report["Invalid RPM"] = invalid_rpm
+
+    df.loc[
+        df["Setting_Speed_RPM"] < RPM_MIN,
+        "Setting_Speed_RPM"
+    ] = np.nan
+
+    df.loc[
+        df["Setting_Speed_RPM"] > RPM_MAX,
+        "Setting_Speed_RPM"
+    ] = np.nan
+
+    df["Setting_Speed_RPM"] = df[
+        "Setting_Speed_RPM"
+    ].fillna(
+        df["Setting_Speed_RPM"].median()
+    )
+
+    # --------------------------------------------
+    # Outlier (IQR)
+    # --------------------------------------------
+
+    outlier_total = 0
+
+    outlier_columns = [
+
+        "Qty_OK",
+
+        "Qty_NG",
+
+        "Setting_Speed_RPM",
+
+        "Suhu_Mesin_Celsius"
+
+    ]
+
+    for col in outlier_columns:
+
+        if col in df.columns:
+
+            q1 = df[col].quantile(0.25)
+
+            q3 = df[col].quantile(0.75)
+
+            iqr = q3 - q1
+
+            lower = q1 - 1.5 * iqr
+
+            upper = q3 + 1.5 * iqr
+
+            outlier = (
+
+                (df[col] < lower)
+
+                |
+
+                (df[col] > upper)
+
+            )
+
+            outlier_total += outlier.sum()
+
+            df.loc[outlier, col] = df[col].median()
+
+    report["Outlier"] = outlier_total
+
+    # --------------------------------------------
+    # Data sesudah cleaning
+    # --------------------------------------------
+
+    report["Jumlah Data Akhir"] = len(df)
+
+    return df, report
+# =========================================================
+# BAGIAN 5 - FASE 1
+# DATA QUALITY REPORT & ETL PIPELINE
+# =========================================================
+
+def data_quality_report(report):
+    """
+    Mengubah hasil cleaning menjadi DataFrame agar
+    mudah ditampilkan pada dashboard.
+    """
+
+    report_df = pd.DataFrame({
+
+        "Parameter": list(report.keys()),
+
+        "Hasil": list(report.values())
+
+    })
+
+    return report_df
+
+
+# ---------------------------------------------------------
+# Menyimpan hasil cleaning
+# ---------------------------------------------------------
+
+def save_clean_data(df):
+    """
+    Menyimpan data hasil cleaning.
+    """
+
+    df.to_csv(
+        "pt_andalas_cleaned.csv",
+        index=False
+    )
+
+
+# ---------------------------------------------------------
+# Pipeline ETL
+# ---------------------------------------------------------
+
+@st.cache_data(show_spinner="Menjalankan ETL...")
+def load_and_clean_data():
+
+    (
+        produksi,
+        mesin,
+        operator,
+        material,
+        maintenance
+
+    ) = load_raw_data()
+
+    df = sql_join_data(
+
+        produksi,
+
+        mesin,
+
+        operator,
+
+        material
+
+    )
+
+    df_clean, report = clean_data(df)
+
+    save_clean_data(df_clean)
+
+    report_df = data_quality_report(report)
+
+    return (
+
+        df_clean,
+
+        maintenance,
+
+        report_df
+
+    )
+# =========================================================
+# BAGIAN 6 - FASE 2
+# SIDEBAR & FILTER DATA
+# =========================================================
+
+# Menjalankan proses ETL
+
+try:
+
+    df_clean, maintenance, quality_report = load_and_clean_data()
+
+    data_ok = True
+
+except Exception as e:
+
+    data_ok = False
+
+    error_message = str(e)
+
+
+# ---------------------------------------------------------
+# Error Handling
+# ---------------------------------------------------------
+
 if not data_ok:
-    st.error("⚠️ File CSV tidak ditemukan!")
+
+    st.error("Dataset tidak dapat dimuat.")
+
+    st.code(error_message)
+
     st.stop()
 
-# ─────────────────────────────────────────────
-# APPLY FILTERS
-# ─────────────────────────────────────────────
+
+# ---------------------------------------------------------
+# Sidebar
+# ---------------------------------------------------------
+
+with st.sidebar:
+
+    st.title("🏭 Dashboard Produksi")
+
+    st.markdown("---")
+
+    st.subheader("Filter Data")
+
+
+    # ----------------------------------------
+    # Filter Shift
+    # ----------------------------------------
+
+    daftar_shift = ["Semua"] + sorted(
+
+        df_clean["Shift"].dropna().unique()
+
+    )
+
+    shift = st.selectbox(
+
+        "Shift",
+
+        daftar_shift
+
+    )
+
+
+    # ----------------------------------------
+    # Filter Line Produksi
+    # ----------------------------------------
+
+    daftar_line = ["Semua"] + sorted(
+
+        df_clean["Line_Produksi"].dropna().unique()
+
+    )
+
+    line = st.selectbox(
+
+        "Line Produksi",
+
+        daftar_line
+
+    )
+
+
+    # ----------------------------------------
+    # Filter Mesin
+    # ----------------------------------------
+
+    daftar_mesin = ["Semua"] + sorted(
+
+        df_clean["Nama_Mesin"].dropna().unique()
+
+    )
+
+    mesin = st.selectbox(
+
+        "Mesin",
+
+        daftar_mesin
+
+    )
+
+
+    # ----------------------------------------
+    # Filter Operator
+    # ----------------------------------------
+
+    daftar_operator = ["Semua"] + sorted(
+
+        df_clean["Nama_Operator"].dropna().unique()
+
+    )
+
+    operator = st.selectbox(
+
+        "Operator",
+
+        daftar_operator
+
+    )
+
+
+    # ----------------------------------------
+    # Filter Tanggal
+    # ----------------------------------------
+
+    tanggal_awal = df_clean["Tanggal"].min()
+
+    tanggal_akhir = df_clean["Tanggal"].max()
+
+    tanggal = st.date_input(
+
+        "Rentang Tanggal",
+
+        value=(
+
+            tanggal_awal,
+
+            tanggal_akhir
+
+        )
+
+    )
+
+    st.markdown("---")
+
+    st.subheader("Data Quality")
+
+    st.dataframe(
+
+        quality_report,
+
+        use_container_width=True,
+
+        hide_index=True
+
+    )
+
+    st.markdown("---")
+
+    st.caption(
+
+        f"Jumlah Data : {len(df_clean):,}"
+
+    )
+# =========================================================
+# FILTER DATAFRAME
+# =========================================================
+
 df = df_clean.copy()
 
-if sel_shift != "Semua":
-    df = df[df["Shift"] == sel_shift]
-if sel_line != "Semua":
-    df = df[df["Line_Produksi"] == sel_line]
-if len(sel_dates) == 2:
-    df = df[(df["Tanggal"].dt.date >= sel_dates[0]) & (df["Tanggal"].dt.date <= sel_dates[1])]
 
-# ─────────────────────────────────────────────
-# HEADER
-# ─────────────────────────────────────────────
-st.markdown("# 🏭 Dashboard Analitik Produksi")
-st.markdown(f"<p style='color:#5c6bc0;margin-top:-10px;'>Data sesudah filter: <strong style='color:#7986cb'>{len(df):,} baris</strong></p>", unsafe_allow_html=True)
-st.divider()
+if shift != "Semua":
 
-# ─────────────────────────────────────────────
-# TABS (DENGAN PENAMBAHAN TAB INVESTIGASI)
-# ─────────────────────────────────────────────
+    df = df[
+
+        df["Shift"] == shift
+
+    ]
+
+
+if line != "Semua":
+
+    df = df[
+
+        df["Line_Produksi"] == line
+
+    ]
+
+
+if mesin != "Semua":
+
+    df = df[
+
+        df["Nama_Mesin"] == mesin
+
+    ]
+
+
+if operator != "Semua":
+
+    df = df[
+
+        df["Nama_Operator"] == operator
+
+    ]
+
+
+if len(tanggal) == 2:
+
+    df = df[
+
+        (df["Tanggal"] >= pd.to_datetime(tanggal[0]))
+
+        &
+
+        (df["Tanggal"] <= pd.to_datetime(tanggal[1]))
+
+    ]
+# =========================================================
+# BAGIAN 7 - FASE 2
+# EXECUTIVE KPI DASHBOARD
+# =========================================================
+
+st.title("🏭 Dashboard Analitik Produksi")
+
+st.markdown(
+    """
+Dashboard untuk monitoring produksi, kualitas, dan prediksi
+kerusakan mesin.
+"""
+)
+
+st.markdown("---")
+
+
+# ---------------------------------------------------------
+# KPI
+# ---------------------------------------------------------
+
+total_ok = df["Qty_OK"].sum()
+
+total_ng = df["Qty_NG"].sum()
+
+total_produksi = total_ok + total_ng
+
+
+reject_rate = calculate_reject_rate(
+
+    total_ok,
+
+    total_ng
+
+)
+
+
+quality = calculate_quality(
+
+    total_ok,
+
+    total_ng
+
+)
+
+
+# Jika belum tersedia pada dataset,
+# gunakan nilai default
+
+availability = 0.95
+
+performance = 0.90
+
+
+oee = calculate_oee(
+
+    availability,
+
+    performance,
+
+    quality
+
+)
+
+
+avg_rpm = df["Setting_Speed_RPM"].mean()
+
+avg_temp = df["Suhu_Mesin_Celsius"].mean()
+
+
+jumlah_mesin = df["ID_Mesin"].nunique()
+
+jumlah_operator = df["ID_Operator"].nunique()
+
+
+# ---------------------------------------------------------
+# KPI ROW 1
+# ---------------------------------------------------------
+
+col1, col2, col3, col4 = st.columns(4)
+
+col1.metric(
+
+    "Total Produksi",
+
+    f"{total_produksi:,.0f}"
+
+)
+
+col2.metric(
+
+    "Qty OK",
+
+    f"{total_ok:,.0f}"
+
+)
+
+col3.metric(
+
+    "Qty NG",
+
+    f"{total_ng:,.0f}"
+
+)
+
+col4.metric(
+
+    "Reject Rate",
+
+    f"{reject_rate:.2f}%"
+
+)
+
+
+# ---------------------------------------------------------
+# KPI ROW 2
+# ---------------------------------------------------------
+
+col5, col6, col7, col8 = st.columns(4)
+
+col5.metric(
+
+    "OEE",
+
+    f"{oee*100:.2f}%"
+
+)
+
+col6.metric(
+
+    "Average RPM",
+
+    f"{avg_rpm:.0f}"
+
+)
+
+col7.metric(
+
+    "Average Temperature",
+
+    f"{avg_temp:.1f} °C"
+
+)
+
+col8.metric(
+
+    "Machine",
+
+    jumlah_mesin
+
+)
+
+
+# ---------------------------------------------------------
+# KPI ROW 3
+# ---------------------------------------------------------
+
+col9, col10 = st.columns(2)
+
+col9.metric(
+
+    "Operator",
+
+    jumlah_operator
+
+)
+
+col10.metric(
+
+    "Quality",
+
+    f"{quality*100:.2f}%"
+
+)
+
+st.markdown("---")
+# =========================================================
+# BAGIAN 8 - FASE 2
+# EXECUTIVE DASHBOARD
+# =========================================================
+
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
-    "📊 KPI Utama",
-    "🔍 Analisis Kualitas",
-    "🚨 Investigasi Khusus",
-    "🤖 Prediksi Kerusakan",
-    "📋 Data Mentah",
+
+    "📊 Executive Dashboard",
+
+    "⚙️ Bottleneck Stamping",
+
+    "🏭 Shift B Investigation",
+
+    "🤖 Machine Learning",
+
+    "📄 Raw Data"
+
 ])
 
-# ══════════════════════════════════════════════
-# TAB 1 – KPI UTAMA
-# ══════════════════════════════════════════════
+
+# =========================================================
+# TAB 1
+# EXECUTIVE DASHBOARD
+# =========================================================
+
 with tab1:
-    total_produksi = df["Qty_OK"].sum() + df["Qty_NG"].sum()
-    total_ok       = df["Qty_OK"].sum()
-    total_ng       = df["Qty_NG"].sum()
-    reject_rate    = (total_ng / total_produksi * 100) if total_produksi > 0 else 0
-    avg_suhu       = df["Suhu_Mesin_Celsius"].mean()
 
-    c1, c2, c3, c4, c5 = st.columns(5)
-    c1.metric("Total Produksi",    f"{total_produksi:,.0f}")
-    c2.metric("Total Qty OK",      f"{total_ok:,.0f}")
-    c3.metric("Total Qty NG",      f"{total_ng:,.0f}")
-    c4.metric("Reject Rate",       f"{reject_rate:.2f}%", delta_color="inverse")
-    c5.metric("Avg Suhu Mesin",    f"{avg_suhu:.1f} °C")
+    st.subheader("Executive Dashboard")
 
-    st.markdown("<div class='section-header'>Tren Harian</div>", unsafe_allow_html=True)
-    daily = df.groupby("Tanggal")[["Qty_OK", "Qty_NG"]].sum().reset_index()
-    daily["Reject_%"] = (daily["Qty_NG"] / (daily["Qty_OK"] + daily["Qty_NG"])) * 100
+    # -----------------------------------------------------
+    # Trend Produksi
+    # -----------------------------------------------------
 
-    fig_trend = make_subplots(specs=[[{"secondary_y": True}]])
-    fig_trend.add_trace(go.Bar(x=daily["Tanggal"], y=daily["Qty_OK"], name="Qty OK", marker_color="#42a5f5"), secondary_y=False)
-    fig_trend.add_trace(go.Bar(x=daily["Tanggal"], y=daily["Qty_NG"], name="Qty NG", marker_color="#ef5350"), secondary_y=False)
-    fig_trend.add_trace(go.Scatter(x=daily["Tanggal"], y=daily["Reject_%"], name="Reject %", line=dict(color="#ffca28", width=2)), secondary_y=True)
-    fig_trend.update_layout(barmode="stack", title="Produksi Harian & Reject Rate", **DARK_LAYOUT)
-    st.plotly_chart(fig_trend, use_container_width=True)
+    produksi_harian = (
 
-# ══════════════════════════════════════════════
-# TAB 2 – ANALISIS KUALITAS
-# ══════════════════════════════════════════════
+        df.groupby("Tanggal")[
+
+            ["Qty_OK", "Qty_NG"]
+
+        ]
+
+        .sum()
+
+        .reset_index()
+
+    )
+
+    fig = px.line(
+
+        produksi_harian,
+
+        x="Tanggal",
+
+        y=["Qty_OK", "Qty_NG"],
+
+        markers=True,
+
+        title="Trend Produksi Harian"
+
+    )
+
+    st.plotly_chart(
+
+        fig,
+
+        use_container_width=True
+
+    )
+
+
+    # -----------------------------------------------------
+    # Reject Rate per Shift
+    # -----------------------------------------------------
+
+    shift_summary = (
+
+        df.groupby("Shift")[
+
+            ["Qty_OK", "Qty_NG"]
+
+        ]
+
+        .sum()
+
+        .reset_index()
+
+    )
+
+    shift_summary["Reject Rate"] = (
+
+        shift_summary["Qty_NG"]
+
+        /
+
+        (
+
+            shift_summary["Qty_OK"]
+
+            +
+
+            shift_summary["Qty_NG"]
+
+        )
+
+    ) * 100
+
+    fig = px.bar(
+
+        shift_summary,
+
+        x="Shift",
+
+        y="Reject Rate",
+
+        text="Reject Rate",
+
+        color="Reject Rate",
+
+        title="Reject Rate per Shift"
+
+    )
+
+    st.plotly_chart(
+
+        fig,
+
+        use_container_width=True
+
+    )
+
+
+    # -----------------------------------------------------
+    # Produksi per Mesin
+    # -----------------------------------------------------
+
+    mesin_summary = (
+
+        df.groupby("Nama_Mesin")[
+
+            ["Qty_OK", "Qty_NG"]
+
+        ]
+
+        .sum()
+
+        .reset_index()
+
+    )
+
+    fig = px.bar(
+
+        mesin_summary,
+
+        x="Nama_Mesin",
+
+        y=["Qty_OK", "Qty_NG"],
+
+        barmode="group",
+
+        title="Output Produksi per Mesin"
+
+    )
+
+    st.plotly_chart(
+
+        fig,
+
+        use_container_width=True
+
+    )
+
+
+    # -----------------------------------------------------
+    # Distribusi RPM
+    # -----------------------------------------------------
+
+    fig = px.histogram(
+
+        df,
+
+        x="Setting_Speed_RPM",
+
+        nbins=30,
+
+        title="Distribusi Kecepatan Mesin (RPM)"
+
+    )
+
+    st.plotly_chart(
+
+        fig,
+
+        use_container_width=True
+
+    )
+
+
+    # -----------------------------------------------------
+    # Distribusi Suhu
+    # -----------------------------------------------------
+
+    fig = px.box(
+
+        df,
+
+        y="Suhu_Mesin_Celsius",
+
+        color="Shift",
+
+        title="Distribusi Suhu Mesin"
+
+    )
+
+    st.plotly_chart(
+
+        fig,
+
+        use_container_width=True
+
+    )
+
+
+    # -----------------------------------------------------
+    # Executive Insight
+    # -----------------------------------------------------
+
+    st.subheader("Executive Insight")
+
+    mesin_ng = (
+
+        df.groupby("Nama_Mesin")["Qty_NG"]
+
+        .sum()
+
+        .idxmax()
+
+    )
+
+    shift_ng = (
+
+        df.groupby("Shift")["Qty_NG"]
+
+        .sum()
+
+        .idxmax()
+
+    )
+
+    operator_ng = (
+
+        df.groupby("Nama_Operator")["Qty_NG"]
+
+        .sum()
+
+        .idxmax()
+
+    )
+
+    st.info(f"""
+
+• Mesin dengan reject tertinggi : **{mesin_ng}**
+
+• Shift dengan reject tertinggi : **{shift_ng}**
+
+• Operator dengan reject tertinggi : **{operator_ng}**
+
+• Reject Rate saat ini : **{reject_rate:.2f}%**
+
+• Quality Rate : **{quality*100:.2f}%**
+
+• OEE : **{oee*100:.2f}%**
+
+""")
+# =========================================================
+# BAGIAN 9 - FASE 2
+# BOTTLENECK ANALYSIS (STAMPING)
+# =========================================================
+
 with tab2:
-    st.markdown("<div class='section-header'>Uji Chi-Square: Shift vs Kualitas</div>", unsafe_allow_html=True)
-    shift_quality = df.groupby("Shift")[["Qty_OK", "Qty_NG"]].sum()
-    if len(shift_quality) >= 2 and shift_quality.values.sum() > 0:
-        chi2_stat, p_val, dof, _ = chi2_contingency(shift_quality.values)
-        sig = "Signifikan ✅ (reject rate bergantung pada shift)" if p_val < 0.05 else "Tidak Signifikan ❌"
-        st.markdown(f"""
-        <div class='stat-badge'>
-            📐 <strong>Chi-Square:</strong> {chi2_stat:.4f} | <strong>P-Value:</strong> {p_val:.4e} | 🔎 Kesimpulan: <strong>{sig}</strong>
-        </div>""", unsafe_allow_html=True)
 
-    colC, colD = st.columns(2)
-    with colC:
-        fig_scatter = px.scatter(df, x="Setting_Speed_RPM", y="Qty_NG", color="Skill_Level", size="Suhu_Mesin_Celsius", opacity=0.6, title="Speed RPM vs Defek")
-        fig_scatter.update_layout(**DARK_LAYOUT)
-        st.plotly_chart(fig_scatter, use_container_width=True)
-    with colD:
-        fig_box = px.box(df, x="Line_Produksi", y="Suhu_Mesin_Celsius", color="Shift", title="Distribusi Suhu Mesin per Line")
-        fig_box.update_layout(**DARK_LAYOUT)
-        st.plotly_chart(fig_box, use_container_width=True)
+    st.subheader("Analisis Bottleneck Stasiun Stamping")
 
-# ══════════════════════════════════════════════
-# TAB 3 – INVESTIGASI KHUSUS (FASE 2)
-# ══════════════════════════════════════════════
+    # -----------------------------------------------------
+    # Filter Stamping
+    # -----------------------------------------------------
+
+    if "Line_Produksi" in df.columns:
+
+        df_stamping = df[
+            df["Line_Produksi"].str.upper() == "STAMPING"
+        ].copy()
+
+    else:
+
+        df_stamping = df.copy()
+
+        st.warning(
+            "Kolom Line_Produksi tidak ditemukan. Seluruh data digunakan."
+        )
+
+
+    if df_stamping.empty:
+
+        st.warning("Data Stamping tidak tersedia.")
+
+    else:
+
+        # -------------------------------------------------
+        # KPI
+        # -------------------------------------------------
+
+        total_ok_stamp = df_stamping["Qty_OK"].sum()
+
+        total_ng_stamp = df_stamping["Qty_NG"].sum()
+
+        reject_stamp = calculate_reject_rate(
+            total_ok_stamp,
+            total_ng_stamp
+        )
+
+        mesin_stamp = df_stamping["Nama_Mesin"].nunique()
+
+        c1, c2, c3 = st.columns(3)
+
+        c1.metric(
+            "Produksi Stamping",
+            f"{total_ok_stamp + total_ng_stamp:,.0f}"
+        )
+
+        c2.metric(
+            "Reject Rate",
+            f"{reject_stamp:.2f}%"
+        )
+
+        c3.metric(
+            "Jumlah Mesin",
+            mesin_stamp
+        )
+
+
+        # -------------------------------------------------
+        # Output Mesin
+        # -------------------------------------------------
+
+        mesin_summary = (
+
+            df_stamping
+
+            .groupby("Nama_Mesin")[
+
+                ["Qty_OK", "Qty_NG"]
+
+            ]
+
+            .sum()
+
+            .reset_index()
+
+        )
+
+        fig = px.bar(
+
+            mesin_summary,
+
+            x="Nama_Mesin",
+
+            y=["Qty_OK", "Qty_NG"],
+
+            barmode="group",
+
+            title="Output Produksi Mesin Stamping"
+
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+
+
+        # -------------------------------------------------
+        # Pareto Defect
+        # -------------------------------------------------
+
+        pareto = (
+
+            df_stamping
+
+            .groupby("Nama_Mesin")["Qty_NG"]
+
+            .sum()
+
+            .sort_values(ascending=False)
+
+            .reset_index()
+
+        )
+
+        pareto["Persen"] = (
+
+            pareto["Qty_NG"]
+
+            /
+
+            pareto["Qty_NG"].sum()
+
+        ) * 100
+
+        pareto["Kumulatif"] = pareto["Persen"].cumsum()
+
+        fig = make_subplots(
+            specs=[[{"secondary_y": True}]]
+        )
+
+        fig.add_bar(
+
+            x=pareto["Nama_Mesin"],
+
+            y=pareto["Qty_NG"],
+
+            name="Reject"
+
+        )
+
+        fig.add_scatter(
+
+            x=pareto["Nama_Mesin"],
+
+            y=pareto["Kumulatif"],
+
+            mode="lines+markers",
+
+            name="Kumulatif",
+
+            secondary_y=True
+
+        )
+
+        fig.update_layout(
+            title="Pareto Defect Mesin Stamping"
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+
+
+        # -------------------------------------------------
+        # Heatmap Mesin vs Shift
+        # -------------------------------------------------
+
+        pivot = pd.pivot_table(
+
+            df_stamping,
+
+            values="Qty_NG",
+
+            index="Nama_Mesin",
+
+            columns="Shift",
+
+            aggfunc="sum",
+
+            fill_value=0
+
+        )
+
+        fig = px.imshow(
+
+            pivot,
+
+            text_auto=True,
+
+            aspect="auto",
+
+            title="Heatmap Reject Mesin vs Shift"
+
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+
+
+        # -------------------------------------------------
+        # Downtime
+        # -------------------------------------------------
+
+        if not maintenance.empty:
+
+            downtime = (
+
+                maintenance
+
+                .groupby("ID_Mesin")["Durasi_Jam"]
+
+                .sum()
+
+                .reset_index()
+
+            )
+
+            downtime = downtime.merge(
+
+                df_stamping[
+                    ["ID_Mesin", "Nama_Mesin"]
+                ].drop_duplicates(),
+
+                on="ID_Mesin",
+
+                how="left"
+
+            )
+
+            fig = px.bar(
+
+                downtime,
+
+                x="Nama_Mesin",
+
+                y="Durasi_Jam",
+
+                color="Durasi_Jam",
+
+                title="Total Downtime Mesin"
+
+            )
+
+            st.plotly_chart(
+                fig,
+                use_container_width=True
+            )
+
+
+        # -------------------------------------------------
+        # Root Cause
+        # -------------------------------------------------
+
+        mesin_terburuk = (
+
+            pareto.iloc[0]["Nama_Mesin"]
+
+        )
+
+        reject_mesin = (
+
+            pareto.iloc[0]["Qty_NG"]
+
+        )
+
+        st.subheader("Root Cause Analysis")
+
+        st.success(f"""
+
+Mesin dengan reject tertinggi adalah **{mesin_terburuk}**.
+
+Jumlah produk cacat yang dihasilkan sebanyak **{reject_mesin:,.0f} unit**.
+
+Mesin ini menjadi kandidat utama bottleneck karena memiliki kontribusi cacat terbesar pada proses Stamping.
+
+Rekomendasi awal:
+
+• Prioritaskan preventive maintenance.
+
+• Evaluasi parameter RPM dan suhu operasi.
+
+• Periksa kondisi tooling dan dies.
+
+• Evaluasi kompetensi operator pada mesin tersebut.
+
+""")
+# =========================================================
+# BAGIAN 10 - FASE 2
+# SHIFT B INVESTIGATION
+# =========================================================
+
 with tab3:
-    st.markdown("<div class='section-header'>Fokus: Anomali Shift B & Bottleneck Stamping</div>", unsafe_allow_html=True)
-    st.write("Visualisasi ini menyoroti area kritis pabrik sesuai temuan Exploratory Data Analysis.")
-    
-    col_inv1, col_inv2 = st.columns(2)
-    with col_inv1:
-        st.subheader("Anomali Defect di Shift B")
-        df_shift = df.copy()
-        df_shift['Kategori_Shift'] = df_shift['Shift'].apply(lambda x: 'Shift B (Anomali)' if x == 'B' else 'Shift Lainnya')
-        fig_anomali = px.histogram(df_shift, x="Kategori_Shift", y="Qty_NG", histfunc="avg", color="Kategori_Shift",
-                                   title="Rata-rata Cacat (Defect): Shift B vs Lainnya",
-                                   color_discrete_sequence=["#ef5350", "#42a5f5"])
-        fig_anomali.update_layout(**DARK_LAYOUT)
-        st.plotly_chart(fig_anomali, use_container_width=True)
-        
-    with col_inv2:
-        st.subheader("Bottleneck: Line Stamping")
-        df_line = df.copy()
-        df_line['Kategori_Line'] = df_line['Line_Produksi'].apply(lambda x: 'Stamping (Bottleneck)' if x == 'STAMPING' else 'Lainnya')
-        fig_bottle = px.box(df_line, x="Kategori_Line", y="Suhu_Mesin_Celsius", color="Kategori_Line",
-                            title="Distribusi Panas Suhu: Stamping vs Lainnya",
-                            color_discrete_sequence=["#ffca28", "#42a5f5"])
-        fig_bottle.update_layout(**DARK_LAYOUT)
-        st.plotly_chart(fig_bottle, use_container_width=True)
 
-# ══════════════════════════════════════════════
-# TAB 4 – PREDIKSI KERUSAKAN MESIN (FASE 3)
-# ══════════════════════════════════════════════
-with tab4:
-    st.markdown("<div class='section-header'>Random Forest – Predictive Maintenance</div>", unsafe_allow_html=True)
-    try:
-        model, report, cm, importances, df_ml = train_ml_model(df_clean)
+    st.subheader("Investigasi Anomali Produk Cacat - Shift B")
 
-        colE, colF = st.columns(2)
-        with colE:
-            fig_cm = px.imshow(cm, text_auto=True, x=["Normal", "Breakdown"], y=["Normal", "Breakdown"], color_continuous_scale="Blues", title="Confusion Matrix")
-            fig_cm.update_layout(**DARK_LAYOUT)
-            st.plotly_chart(fig_cm, use_container_width=True)
-        with colF:
-            fig_imp = px.bar(importances.reset_index(), x="index", y=importances.values, title="Feature Importance")
-            fig_imp.update_layout(**DARK_LAYOUT)
-            st.plotly_chart(fig_imp, use_container_width=True)
+    # -----------------------------------------------------
+    # Filter Shift B
+    # -----------------------------------------------------
 
-        st.markdown("<div class='section-header'>Simulasi Prediksi Breakdown</div>", unsafe_allow_html=True)
-        colG, colH, colI = st.columns(3)
-        with colG: sim_rpm  = st.slider("Setting Speed RPM", 500, 5000, 2000, step=50)
-        with colH: sim_suhu = st.slider("Suhu Mesin (°C)", 50, 250, 120, step=5)
-        with colI: sim_skill = st.slider("Skill Level Operator", 1, 5, 3)
+    df_shift_b = df[
+        df["Shift"].astype(str).str.upper() == "B"
+    ].copy()
 
-        pred = model.predict([[sim_rpm, sim_suhu, sim_skill]])[0]
-        prob = model.predict_proba([[sim_rpm, sim_suhu, sim_skill]])[0]
+    if df_shift_b.empty:
 
-        if pred == 1: st.error(f"⚠️ **PREDIKSI: RISIKO BREAKDOWN** — Probabilitas: {prob[1]*100:.1f}%")
-        else: st.success(f"✅ **PREDIKSI: KONDISI NORMAL** — Probabilitas normal: {prob[0]*100:.1f}%")
-        
-        # Kesimpulan Manajerial (Wajib Fase 3)
-        st.markdown("<div class='section-header'>📝 Kesimpulan & Rekomendasi (Laporan Manajerial)</div>", unsafe_allow_html=True)
-        st.info("""
-        **Insight Utama dari Model Prediksi & Analisis Kualitas:**
-        1. **Korelasi Kritis:** Model menunjukkan risiko *breakdown* meningkat tajam jika **Operator Level 1** mengoperasikan mesin pada kecepatan **>1500 RPM**.
-        2. **Bottleneck & Suhu Rawan:** Line Stamping sering kali menjadi bottleneck karena suhunya rata-rata jauh lebih tinggi dibandingkan line lain. Jika dibiarkan beroperasi konstan di atas 120°C, risiko kerusakan meningkat drastis.
-        3. **Anomali Shift B:** Uji statistik membuktikan bahwa performa Shift B secara signifikan memicu jumlah *reject* (NG) yang lebih tinggi dibanding shift lainnya.
-        
-        **Rekomendasi Tindakan:**
-        * **Standar Operasional (SOP):** Kunci/limit kecepatan maksimal mesin di angka 1500 RPM khusus saat shift dijalankan oleh Operator dengan Skill Level 1.
-        * **Intervensi Shift B:** Lakukan audit inspeksi kualitas (QA) ekstra dan jadwalkan *training* penyegaran untuk supervisor maupun operator di Shift B.
-        * **Maintenance Preventif:** Percepat dan prioritaskan jadwal *maintenance* khusus untuk sistem pendingin di area Line Stamping.
-        """)
+        st.warning("Data Shift B tidak tersedia.")
 
-    except Exception as e:
-        st.error(f"Terjadi error saat melatih model: {e}")
+    else:
 
-# ══════════════════════════════════════════════
-# TAB 5 – DATA MENTAH
-# ══════════════════════════════════════════════
-with tab5:
-    st.markdown(f"### Data Bersih ({len(df):,} baris setelah filter)")
-    st.dataframe(df, use_container_width=True, height=500)
-    csv_bytes = df.to_csv(index=False).encode("utf-8")
-    st.download_button(label="⬇️ Unduh CSV", data=csv_bytes, file_name="data_produksi_bersih.csv", mime="text/csv")
+        # -------------------------------------------------
+        # KPI Shift B
+        # -------------------------------------------------
+
+        total_ok_b = df_shift_b["Qty_OK"].sum()
+
+        total_ng_b = df_shift_b["Qty_NG"].sum()
+
+        reject_b = calculate_reject_rate(
+            total_ok_b,
+            total_ng_b
+        )
+
+        avg_rpm_b = df_shift_b["Setting_Speed_RPM"].mean()
+
+        avg_temp_b = df_shift_b["Suhu_Mesin_Celsius"].mean()
+
+        c1, c2, c3, c4 = st.columns(4)
+
+        c1.metric(
+            "Produksi",
+            f"{total_ok_b + total_ng_b:,.0f}"
+        )
+
+        c2.metric(
+            "Reject Rate",
+            f"{reject_b:.2f}%"
+        )
+
+        c3.metric(
+            "Average RPM",
+            f"{avg_rpm_b:.0f}"
+        )
+
+        c4.metric(
+            "Average Temperature",
+            f"{avg_temp_b:.1f} °C"
+        )
+
+        # -------------------------------------------------
+        # Trend Produksi Shift B
+        # -------------------------------------------------
+
+        trend = (
+
+            df_shift_b
+
+            .groupby("Tanggal")[
+
+                ["Qty_OK", "Qty_NG"]
+
+            ]
+
+            .sum()
+
+            .reset_index()
+
+        )
+
+        fig = px.line(
+
+            trend,
+
+            x="Tanggal",
+
+            y=["Qty_OK", "Qty_NG"],
+
+            markers=True,
+
+            title="Trend Produksi Shift B"
+
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+
+        # -------------------------------------------------
+        # Scatter RPM vs Reject
+        # -------------------------------------------------
+
+        fig = px.scatter(
+
+            df_shift_b,
+
+            x="Setting_Speed_RPM",
+
+            y="Qty_NG",
+
+            color="Nama_Mesin",
+
+            hover_data=["Nama_Operator"],
+
+            title="RPM vs Produk Cacat"
+
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+
+        # -------------------------------------------------
+        # Scatter Temperature vs Reject
+        # -------------------------------------------------
+
+        fig = px.scatter(
+
+            df_shift_b,
+
+            x="Suhu_Mesin_Celsius",
+
+            y="Qty_NG",
+
+            color="Nama_Mesin",
+
+            hover_data=["Nama_Operator"],
+
+            title="Temperatur vs Produk Cacat"
+
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+
+        # -------------------------------------------------
+        # Boxplot RPM
+        # -------------------------------------------------
+
+        fig = px.box(
+
+            df_shift_b,
+
+            x="Nama_Mesin",
+
+            y="Setting_Speed_RPM",
+
+            color="Nama_Mesin",
+
+            title="Distribusi RPM per Mesin"
+
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+
+        # -------------------------------------------------
+        # Boxplot Temperatur
+        # -------------------------------------------------
+
+        fig = px.box(
+
+            df_shift_b,
+
+            x="Nama_Mesin",
+
+            y="Suhu_Mesin_Celsius",
+
+            color="Nama_Mesin",
+
+            title="Distribusi Temperatur per Mesin"
+
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+
+        # -------------------------------------------------
+        # Korelasi
+        # -------------------------------------------------
+
+        st.subheader("Correlation Matrix")
+
+        corr = df_shift_b[
+
+            [
+
+                "Qty_OK",
+
+                "Qty_NG",
+
+                "Setting_Speed_RPM",
+
+                "Suhu_Mesin_Celsius"
+
+            ]
+
+        ].corr()
+
+        fig = px.imshow(
+
+            corr,
+
+            text_auto=True,
+
+            color_continuous_scale="RdBu_r",
+
+            title="Korelasi Variabel"
+
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+
+        # -------------------------------------------------
+        # Operator dengan Reject Terbesar
+        # -------------------------------------------------
+
+        operator_summary = (
+
+            df_shift_b
+
+            .groupby("Nama_Operator")["Qty_NG"]
+
+            .sum()
+
+            .sort_values(ascending=False)
+
+            .reset_index()
+
+        )
+
+        fig = px.bar(
+
+            operator_summary,
+
+            x="Nama_Operator",
+
+            y="Qty_NG",
+
+            color="Qty_NG",
+
+            title="Reject per Operator"
+
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+
+        # -------------------------------------------------
+        # Mesin dengan Reject Terbesar
+        # -------------------------------------------------
+
+        mesin_summary = (
+
+            df_shift_b
+
+            .groupby("Nama_Mesin")["Qty_NG"]
+
+            .sum()
+
+            .sort_values(ascending=False)
+
+            .reset_index()
+
+        )
+
+        fig = px.bar(
+
+            mesin_summary,
+
+            x="Nama_Mesin",
+
+            y="Qty_NG",
+
+            color="Qty_NG",
+
+            title="Reject per Mesin"
+
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+
+        # -------------------------------------------------
+        # Executive Insight
+        # -------------------------------------------------
+
+        operator_terburuk = operator_summary.iloc[0]["Nama_Operator"]
+
+        mesin_terburuk = mesin_summary.iloc[0]["Nama_Mesin"]
+
+        st.subheader("Executive Insight")
+
+        st.info(f"""
+
+Shift B menunjukkan reject rate sebesar **{reject_b:.2f}%**.
+
+Operator dengan reject tertinggi adalah **{operator_terburuk}**.
+
+Mesin dengan reject tertinggi adalah **{mesin_terburuk}**.
+
+Berdasarkan visualisasi RPM, temperatur, dan distribusi reject, investigasi lanjutan perlu difokuskan pada parameter operasi mesin serta kompetensi operator pada Shift B.
+
+""")
+# =========================================================
+# BAGIAN 11 - FASE 2
+# ANALISIS STATISTIK
+# =========================================================
+
+with tab3:
+
+    st.markdown("---")
+
+    st.subheader("Analisis Statistik")
+
+    # -----------------------------------------------------
+    # CHI-SQUARE
+    # Shift vs Skill Level
+    # -----------------------------------------------------
+
+    st.markdown("### 1. Uji Chi-Square")
+
+    if "Skill_Level" in df_shift_b.columns:
+
+        contingency = pd.crosstab(
+
+            df_shift_b["Shift"],
+
+            df_shift_b["Skill_Level"]
+
+        )
+
+        chi2, p_value, dof, expected = chi2_contingency(
+            contingency
+        )
+
+        c1, c2 = st.columns(2)
+
+        c1.metric(
+            "Chi-Square",
+            f"{chi2:.3f}"
+        )
+
+        c2.metric(
+            "p-value",
+            f"{p_value:.4f}"
+        )
+
+        if p_value < 0.05:
+
+            st.success(
+                "Terdapat hubungan yang signifikan (p < 0.05)."
+            )
+
+        else:
+
+            st.info(
+                "Tidak terdapat hubungan yang signifikan (p ≥ 0.05)."
+            )
+
+    else:
+
+        st.warning(
+            "Kolom Skill_Level tidak ditemukan."
+        )
+
+
+    # -----------------------------------------------------
+    # ANOVA
+    # RPM berdasarkan Mesin
+    # -----------------------------------------------------
+
+    st.markdown("---")
+
+    st.markdown("### 2. Uji ANOVA")
+
+    kelompok = []
+
+    for nama_mesin in df_shift_b["Nama_Mesin"].unique():
+
+        kelompok.append(
+
+            df_shift_b[
+                df_shift_b["Nama_Mesin"] == nama_mesin
+            ]["Setting_Speed_RPM"]
+
+        )
+
+    if len(kelompok) >= 2:
+
+        f_stat, p_value = f_oneway(*kelompok)
+
+        c1, c2 = st.columns(2)
+
+        c1.metric(
+            "F Statistic",
+            f"{f_stat:.3f}"
+        )
+
+        c2.metric(
+            "p-value",
+            f"{p_value:.4f}"
+        )
+
+        if p_value < 0.05:
+
+            st.success(
+                "Terdapat perbedaan RPM yang signifikan antar mesin."
+            )
+
+        else:
+
+            st.info(
+                "Tidak terdapat perbedaan RPM yang signifikan."
+            )
+
+
+    # -----------------------------------------------------
+    # KRUSKAL WALLIS
+    # -----------------------------------------------------
+
+    st.markdown("---")
+
+    st.markdown("### 3. Uji Kruskal-Wallis")
+
+    if len(kelompok) >= 2:
+
+        h_stat, p_value = kruskal(*kelompok)
+
+        c1, c2 = st.columns(2)
+
+        c1.metric(
+            "H Statistic",
+            f"{h_stat:.3f}"
+        )
+
+        c2.metric(
+            "p-value",
+            f"{p_value:.4f}"
+        )
+
+        if p_value < 0.05:
+
+            st.success(
+                "Distribusi RPM berbeda secara signifikan."
+            )
+
+        else:
+
+            st.info(
+                "Distribusi RPM tidak berbeda secara signifikan."
+            )
+
+
+    # -----------------------------------------------------
+    # CORRELATION
+    # -----------------------------------------------------
+
+    st.markdown("---")
+
+    st.markdown("### 4. Korelasi")
+
+    correlation = df_shift_b[
+        [
+            "Qty_OK",
+            "Qty_NG",
+            "Setting_Speed_RPM",
+            "Suhu_Mesin_Celsius"
+        ]
+    ].corr()
+
+    st.dataframe(
+        correlation.round(3),
+        use_container_width=True
+    )
+
+
+    # -----------------------------------------------------
+    # RINGKASAN
+    # -----------------------------------------------------
+
+    st.markdown("---")
+
+    st.subheader("Kesimpulan Statistik")
+
+    st.info("""
+
+Analisis statistik digunakan untuk memvalidasi apakah hubungan atau
+perbedaan yang terlihat pada visualisasi memang signifikan secara statistik.
+
+Interpretasi dilakukan berdasarkan nilai p-value:
+
+• p-value < 0.05 → signifikan
+
+• p-value ≥ 0.05 → tidak signifikan
+
+Hasil analisis ini menjadi dasar dalam menyusun rekomendasi pada fase
+Machine Learning dan Executive Summary.
+
+""")
