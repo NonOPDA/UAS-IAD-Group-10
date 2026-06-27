@@ -1,0 +1,381 @@
+ID_Maintenance,Tanggal,ID_Mesin,Jenis_Maintenance,Durasi_Downtime_Menit,Keterangan
+TRX-MTC-000163,2026-03-28,MC-010,Inspection,109,Penggantian sparepart rutin
+TRX-MTC-000199,2026-03-28,MC-009,Corrective,179,Inspeksi berkala
+TRX-MTC-000102,2026-03-28,MC-014,Corrective,124,Inspeksi berkala
+TRX-MTC-000007,2026-03-28,MC-012,Preventive,30,Perbaikan mendadak
+TRX-MTC-000123,2026-03-28,MC-014,Inspection,24,Pelumasan
+TRX-MTC-000071,2026-03-29,MC-002,Corrective,117,Kalibrasi sensor
+TRX-MTC-000327,2026-03-29,MC-002,Breakdown,159,Overheat akibat kecepatan tinggi
+TRX-MTC-000317,2026-03-29,MC-002,Breakdown,241,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000286,2026-03-29,MC-002,Breakdown,176,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000243,2026-03-29,MC-012,Inspection,140,Perbaikan mendadak
+TRX-MTC-000130,2026-03-30,MC-006,Inspection,39,Inspeksi berkala
+TRX-MTC-000129,2026-03-30,MC-003,Corrective,149,Inspeksi berkala
+TRX-MTC-000207,2026-03-30,MC-009,Corrective,168,Perbaikan mendadak
+TRX-MTC-000228,2026-03-30,MC-010,Preventive,58,Perbaikan mendadak
+TRX-MTC-000030,2026-03-30,MC-012,Corrective,30,Penggantian sparepart rutin
+TRX-MTC-000066,2026-03-30,MC-008,Preventive,41,Kalibrasi sensor
+TRX-MTC-000106,2026-03-30,MC-003,Preventive,147,Penggantian sparepart rutin
+TRX-MTC-000298,2026-03-30,MC-002,Breakdown,137,Overheat akibat kecepatan tinggi
+TRX-MTC-000371,2026-03-30,MC-002,Breakdown,199,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000103,2026-03-31,MC-002,Preventive,123,Pembersihan unit
+TRX-MTC-000128,2026-03-31,MC-014,Breakdown,148,Penggantian sparepart rutin
+TRX-MTC-000348,2026-03-31,MC-002,Breakdown,297,Overheat akibat kecepatan tinggi
+TRX-MTC-000177,2026-03-31,MC-011,Preventive,123,Penggantian sparepart rutin
+TRX-MTC-000278,2026-04-01,MC-002,Breakdown,276,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000296,2026-04-01,MC-002,Breakdown,164,Overheat akibat kecepatan tinggi
+TRX-MTC-000362,2026-04-01,MC-002,Breakdown,185,Komponen press macet (high RPM)
+TRX-MTC-000134,2026-04-01,MC-010,Preventive,173,Inspeksi berkala
+TRX-MTC-000015,2026-04-01,MC-013,Preventive,115,Pelumasan
+TRX-MTC-000114,2026-04-01,MC-013,Inspection,90,Pembersihan unit
+TRX-MTC-000141,2026-04-02,MC-004,Breakdown,72,Kalibrasi sensor
+TRX-MTC-000145,2026-04-02,MC-002,Inspection,107,Pembersihan unit
+TRX-MTC-000181,2026-04-02,MC-010,Preventive,88,Kalibrasi sensor
+TRX-MTC-000028,2026-04-02,MC-005,Preventive,59,Pelumasan
+TRX-MTC-000175,2026-04-02,MC-002,Breakdown,39,Kalibrasi sensor
+TRX-MTC-000212,2026-04-02,MC-014,Inspection,49,Kalibrasi sensor
+TRX-MTC-000225,2026-04-02,MC-011,Corrective,137,Pembersihan unit
+TRX-MTC-000266,2026-04-02,MC-002,Breakdown,110,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000206,2026-04-03,MC-002,Preventive,62,Kalibrasi sensor
+TRX-MTC-000250,2026-04-03,MC-006,Preventive,131,Inspeksi berkala
+TRX-MTC-000110,2026-04-03,MC-002,Corrective,161,Perbaikan mendadak
+TRX-MTC-000334,2026-04-03,MC-002,Breakdown,237,Overheat akibat kecepatan tinggi
+TRX-MTC-000168,2026-04-04,MC-005,Inspection,29,Inspeksi berkala
+TRX-MTC-000174,2026-04-05,MC-003,Preventive,55,Penggantian sparepart rutin
+TRX-MTC-000111,2026-04-05,MC-010,Preventive,119,Pelumasan
+TRX-MTC-000264,2026-04-05,MC-002,Breakdown,241,Overheat akibat kecepatan tinggi
+TRX-MTC-000082,2026-04-05,MC-012,Inspection,41,Pembersihan unit
+TRX-MTC-000190,2026-04-05,MC-009,Preventive,106,Kalibrasi sensor
+TRX-MTC-000380,2026-04-05,MC-002,Breakdown,269,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000021,2026-04-05,MC-013,Preventive,89,Pelumasan
+TRX-MTC-000009,2026-04-05,MC-012,Preventive,80,Penggantian sparepart rutin
+TRX-MTC-000236,2026-04-06,MC-012,Preventive,156,Penggantian sparepart rutin
+TRX-MTC-000115,2026-04-06,MC-009,Breakdown,176,Penggantian sparepart rutin
+TRX-MTC-000027,2026-04-06,MC-004,Inspection,67,Pembersihan unit
+TRX-MTC-000368,2026-04-08,MC-002,Breakdown,216,Overheat akibat kecepatan tinggi
+TRX-MTC-000125,2026-04-08,MC-008,Corrective,135,Pembersihan unit
+TRX-MTC-000022,2026-04-08,MC-011,Preventive,81,Inspeksi berkala
+TRX-MTC-000131,2026-04-08,MC-005,Corrective,68,Pembersihan unit
+TRX-MTC-000189,2026-04-09,MC-011,Preventive,71,Pembersihan unit
+TRX-MTC-000016,2026-04-09,MC-001,Corrective,179,Penggantian sparepart rutin
+TRX-MTC-000251,2026-04-09,MC-002,Breakdown,255,Komponen press macet (high RPM)
+TRX-MTC-000291,2026-04-09,MC-002,Breakdown,98,Stop mendadak - speed tinggi
+TRX-MTC-000166,2026-04-09,MC-005,Preventive,31,Kalibrasi sensor
+TRX-MTC-000332,2026-04-09,MC-002,Breakdown,152,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000326,2026-04-10,MC-002,Breakdown,277,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000180,2026-04-10,MC-008,Preventive,29,Pelumasan
+TRX-MTC-000148,2026-04-10,MC-002,Preventive,64,Kalibrasi sensor
+TRX-MTC-000058,2026-04-11,MC-001,Breakdown,165,Pembersihan unit
+TRX-MTC-000059,2026-04-12,MC-013,Preventive,101,Penggantian sparepart rutin
+TRX-MTC-000041,2026-04-12,MC-013,Corrective,29,Kalibrasi sensor
+TRX-MTC-000237,2026-04-12,MC-011,Inspection,118,Penggantian sparepart rutin
+TRX-MTC-000055,2026-04-12,MC-012,Preventive,128,Perbaikan mendadak
+TRX-MTC-000090,2026-04-12,MC-009,Corrective,103,Pembersihan unit
+TRX-MTC-000364,2026-04-13,MC-002,Breakdown,149,Komponen press macet (high RPM)
+TRX-MTC-000322,2026-04-13,MC-002,Breakdown,172,Komponen press macet (high RPM)
+TRX-MTC-000310,2026-04-14,MC-002,Breakdown,260,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000176,2026-04-14,MC-003,Corrective,100,Kalibrasi sensor
+TRX-MTC-000149,2026-04-14,MC-001,Corrective,116,Pembersihan unit
+TRX-MTC-000261,2026-04-14,MC-002,Breakdown,252,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000126,2026-04-14,MC-002,Preventive,37,Inspeksi berkala
+TRX-MTC-000084,2026-04-14,MC-004,Preventive,129,Perbaikan mendadak
+TRX-MTC-000354,2026-04-15,MC-002,Breakdown,151,Overheat akibat kecepatan tinggi
+TRX-MTC-000373,2026-04-15,MC-002,Breakdown,151,Komponen press macet (high RPM)
+TRX-MTC-000288,2026-04-15,MC-002,Breakdown,236,Komponen press macet (high RPM)
+TRX-MTC-000339,2026-04-15,MC-002,Breakdown,230,Stop mendadak - speed tinggi
+TRX-MTC-000025,2026-04-15,MC-010,Corrective,173,Perbaikan mendadak
+TRX-MTC-000143,2026-04-16,MC-004,Preventive,99,Pembersihan unit
+TRX-MTC-000223,2026-04-16,MC-002,Preventive,138,Kalibrasi sensor
+TRX-MTC-000312,2026-04-16,MC-002,Breakdown,109,Overheat akibat kecepatan tinggi
+TRX-MTC-000321,2026-04-16,MC-002,Breakdown,286,Komponen press macet (high RPM)
+TRX-MTC-000159,2026-04-16,MC-011,Corrective,53,Pembersihan unit
+TRX-MTC-000350,2026-04-16,MC-002,Breakdown,229,Komponen press macet (high RPM)
+TRX-MTC-000014,2026-04-16,MC-003,Breakdown,67,Penggantian sparepart rutin
+TRX-MTC-000283,2026-04-16,MC-002,Breakdown,97,Overheat akibat kecepatan tinggi
+TRX-MTC-000376,2026-04-17,MC-002,Breakdown,261,Komponen press macet (high RPM)
+TRX-MTC-000290,2026-04-18,MC-002,Breakdown,174,Komponen press macet (high RPM)
+TRX-MTC-000254,2026-04-18,MC-002,Breakdown,92,Overheat akibat kecepatan tinggi
+TRX-MTC-000220,2026-04-19,MC-010,Preventive,138,Pelumasan
+TRX-MTC-000182,2026-04-19,MC-003,Preventive,58,Pelumasan
+TRX-MTC-000127,2026-04-19,MC-009,Corrective,28,Pelumasan
+TRX-MTC-000026,2026-04-19,MC-009,Corrective,139,Perbaikan mendadak
+TRX-MTC-000144,2026-04-19,MC-006,Preventive,76,Pembersihan unit
+TRX-MTC-000306,2026-04-20,MC-002,Breakdown,148,Komponen press macet (high RPM)
+TRX-MTC-000347,2026-04-20,MC-002,Breakdown,147,Komponen press macet (high RPM)
+TRX-MTC-000087,2026-04-21,MC-011,Inspection,105,Perbaikan mendadak
+TRX-MTC-000227,2026-04-21,MC-005,Corrective,111,Pelumasan
+TRX-MTC-000105,2026-04-21,MC-010,Corrective,157,Pelumasan
+TRX-MTC-000367,2026-04-21,MC-002,Breakdown,161,Komponen press macet (high RPM)
+TRX-MTC-000229,2026-04-22,MC-005,Corrective,154,Perbaikan mendadak
+TRX-MTC-000208,2026-04-22,MC-010,Preventive,66,Kalibrasi sensor
+TRX-MTC-000245,2026-04-22,MC-014,Preventive,121,Penggantian sparepart rutin
+TRX-MTC-000282,2026-04-23,MC-002,Breakdown,218,Overheat akibat kecepatan tinggi
+TRX-MTC-000140,2026-04-23,MC-004,Preventive,56,Penggantian sparepart rutin
+TRX-MTC-000094,2026-04-24,MC-013,Corrective,49,Pelumasan
+TRX-MTC-000235,2026-04-24,MC-002,Corrective,43,Pembersihan unit
+TRX-MTC-000238,2026-04-24,MC-009,Corrective,117,Pelumasan
+TRX-MTC-000247,2026-04-24,MC-004,Inspection,117,Penggantian sparepart rutin
+TRX-MTC-000289,2026-04-24,MC-002,Breakdown,91,Stop mendadak - speed tinggi
+TRX-MTC-000234,2026-04-25,MC-004,Preventive,137,Pembersihan unit
+TRX-MTC-000120,2026-04-25,MC-003,Preventive,169,Inspeksi berkala
+TRX-MTC-000038,2026-04-25,MC-002,Inspection,131,Perbaikan mendadak
+TRX-MTC-000165,2026-04-25,MC-006,Corrective,47,Kalibrasi sensor
+TRX-MTC-000303,2026-04-25,MC-002,Breakdown,161,Stop mendadak - speed tinggi
+TRX-MTC-000024,2026-04-26,MC-002,Preventive,174,Perbaikan mendadak
+TRX-MTC-000122,2026-04-26,MC-007,Preventive,23,Pembersihan unit
+TRX-MTC-000352,2026-04-26,MC-002,Breakdown,216,Overheat akibat kecepatan tinggi
+TRX-MTC-000265,2026-04-26,MC-002,Breakdown,152,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000117,2026-04-27,MC-006,Preventive,138,Penggantian sparepart rutin
+TRX-MTC-000153,2026-04-27,MC-008,Preventive,85,Penggantian sparepart rutin
+TRX-MTC-000069,2026-04-27,MC-012,Preventive,79,Pembersihan unit
+TRX-MTC-000049,2026-04-28,MC-002,Preventive,20,Pembersihan unit
+TRX-MTC-000194,2026-04-28,MC-013,Preventive,46,Pembersihan unit
+TRX-MTC-000267,2026-04-28,MC-002,Breakdown,277,Stop mendadak - speed tinggi
+TRX-MTC-000260,2026-04-29,MC-002,Breakdown,237,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000061,2026-04-29,MC-013,Inspection,120,Perbaikan mendadak
+TRX-MTC-000359,2026-04-29,MC-002,Breakdown,231,Overheat akibat kecepatan tinggi
+TRX-MTC-000053,2026-04-29,MC-008,Inspection,43,Perbaikan mendadak
+TRX-MTC-000170,2026-04-29,MC-007,Corrective,147,Kalibrasi sensor
+TRX-MTC-000287,2026-04-29,MC-002,Breakdown,261,Komponen press macet (high RPM)
+TRX-MTC-000158,2026-04-30,MC-007,Breakdown,91,Pelumasan
+TRX-MTC-000256,2026-04-30,MC-002,Breakdown,158,Komponen press macet (high RPM)
+TRX-MTC-000001,2026-04-30,MC-003,Inspection,153,Pembersihan unit
+TRX-MTC-000139,2026-04-30,MC-007,Breakdown,83,Perbaikan mendadak
+TRX-MTC-000043,2026-04-30,MC-005,Preventive,98,Kalibrasi sensor
+TRX-MTC-000137,2026-04-30,MC-013,Corrective,101,Kalibrasi sensor
+TRX-MTC-000098,2026-05-01,MC-014,Preventive,75,Perbaikan mendadak
+TRX-MTC-000179,2026-05-01,MC-003,Preventive,134,Pelumasan
+TRX-MTC-000091,2026-05-01,MC-003,Corrective,23,Penggantian sparepart rutin
+TRX-MTC-000196,2026-05-01,MC-002,Inspection,50,Pelumasan
+TRX-MTC-000096,2026-05-01,MC-008,Preventive,55,Inspeksi berkala
+TRX-MTC-000080,2026-05-01,MC-004,Preventive,82,Inspeksi berkala
+TRX-MTC-000057,2026-05-02,MC-008,Corrective,101,Pembersihan unit
+TRX-MTC-000361,2026-05-02,MC-002,Breakdown,125,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000067,2026-05-02,MC-006,Preventive,61,Pembersihan unit
+TRX-MTC-000217,2026-05-02,MC-005,Inspection,133,Pelumasan
+TRX-MTC-000307,2026-05-02,MC-002,Breakdown,147,Overheat akibat kecepatan tinggi
+TRX-MTC-000042,2026-05-02,MC-003,Corrective,52,Pelumasan
+TRX-MTC-000226,2026-05-03,MC-007,Preventive,63,Kalibrasi sensor
+TRX-MTC-000186,2026-05-03,MC-002,Corrective,35,Pelumasan
+TRX-MTC-000065,2026-05-03,MC-010,Preventive,45,Inspeksi berkala
+TRX-MTC-000316,2026-05-04,MC-002,Breakdown,173,Overheat akibat kecepatan tinggi
+TRX-MTC-000116,2026-05-04,MC-011,Corrective,80,Perbaikan mendadak
+TRX-MTC-000076,2026-05-04,MC-014,Inspection,151,Pelumasan
+TRX-MTC-000304,2026-05-04,MC-002,Breakdown,228,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000280,2026-05-04,MC-002,Breakdown,268,Stop mendadak - speed tinggi
+TRX-MTC-000183,2026-05-05,MC-014,Inspection,141,Pembersihan unit
+TRX-MTC-000255,2026-05-05,MC-002,Breakdown,257,Stop mendadak - speed tinggi
+TRX-MTC-000293,2026-05-05,MC-002,Breakdown,293,Komponen press macet (high RPM)
+TRX-MTC-000160,2026-05-05,MC-008,Breakdown,65,Perbaikan mendadak
+TRX-MTC-000202,2026-05-05,MC-012,Preventive,77,Pembersihan unit
+TRX-MTC-000100,2026-05-05,MC-003,Preventive,76,Pelumasan
+TRX-MTC-000355,2026-05-06,MC-002,Breakdown,268,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000162,2026-05-06,MC-013,Inspection,77,Inspeksi berkala
+TRX-MTC-000089,2026-05-06,MC-004,Inspection,59,Perbaikan mendadak
+TRX-MTC-000258,2026-05-07,MC-002,Breakdown,160,Stop mendadak - speed tinggi
+TRX-MTC-000121,2026-05-07,MC-006,Preventive,81,Pelumasan
+TRX-MTC-000073,2026-05-07,MC-003,Preventive,104,Perbaikan mendadak
+TRX-MTC-000292,2026-05-07,MC-002,Breakdown,231,Stop mendadak - speed tinggi
+TRX-MTC-000281,2026-05-08,MC-002,Breakdown,148,Stop mendadak - speed tinggi
+TRX-MTC-000349,2026-05-08,MC-002,Breakdown,146,Stop mendadak - speed tinggi
+TRX-MTC-000231,2026-05-08,MC-008,Preventive,122,Pelumasan
+TRX-MTC-000210,2026-05-08,MC-012,Corrective,76,Pelumasan
+TRX-MTC-000297,2026-05-08,MC-002,Breakdown,295,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000037,2026-05-08,MC-014,Preventive,172,Penggantian sparepart rutin
+TRX-MTC-000138,2026-05-08,MC-009,Preventive,170,Kalibrasi sensor
+TRX-MTC-000205,2026-05-09,MC-012,Corrective,72,Pembersihan unit
+TRX-MTC-000054,2026-05-09,MC-004,Inspection,108,Inspeksi berkala
+TRX-MTC-000045,2026-05-09,MC-002,Preventive,85,Inspeksi berkala
+TRX-MTC-000133,2026-05-09,MC-007,Preventive,104,Pelumasan
+TRX-MTC-000124,2026-05-09,MC-003,Inspection,162,Pembersihan unit
+TRX-MTC-000209,2026-05-09,MC-005,Preventive,89,Pembersihan unit
+TRX-MTC-000360,2026-05-10,MC-002,Breakdown,267,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000270,2026-05-11,MC-002,Breakdown,102,Overheat akibat kecepatan tinggi
+TRX-MTC-000152,2026-05-11,MC-007,Breakdown,168,Pembersihan unit
+TRX-MTC-000224,2026-05-11,MC-005,Breakdown,29,Inspeksi berkala
+TRX-MTC-000064,2026-05-11,MC-011,Corrective,34,Perbaikan mendadak
+TRX-MTC-000107,2026-05-12,MC-007,Corrective,172,Kalibrasi sensor
+TRX-MTC-000315,2026-05-12,MC-002,Breakdown,189,Komponen press macet (high RPM)
+TRX-MTC-000002,2026-05-12,MC-008,Preventive,161,Pelumasan
+TRX-MTC-000216,2026-05-12,MC-002,Breakdown,145,Pelumasan
+TRX-MTC-000192,2026-05-13,MC-004,Breakdown,83,Pembersihan unit
+TRX-MTC-000193,2026-05-13,MC-003,Preventive,55,Kalibrasi sensor
+TRX-MTC-000081,2026-05-13,MC-002,Preventive,69,Pelumasan
+TRX-MTC-000276,2026-05-14,MC-002,Breakdown,269,Overheat akibat kecepatan tinggi
+TRX-MTC-000157,2026-05-14,MC-004,Inspection,39,Kalibrasi sensor
+TRX-MTC-000035,2026-05-14,MC-004,Breakdown,34,Inspeksi berkala
+TRX-MTC-000204,2026-05-15,MC-010,Preventive,95,Perbaikan mendadak
+TRX-MTC-000068,2026-05-15,MC-005,Breakdown,92,Pelumasan
+TRX-MTC-000277,2026-05-15,MC-002,Breakdown,92,Overheat akibat kecepatan tinggi
+TRX-MTC-000323,2026-05-15,MC-002,Breakdown,189,Stop mendadak - speed tinggi
+TRX-MTC-000075,2026-05-15,MC-012,Inspection,94,Pembersihan unit
+TRX-MTC-000230,2026-05-15,MC-014,Preventive,96,Pembersihan unit
+TRX-MTC-000172,2026-05-15,MC-012,Breakdown,81,Inspeksi berkala
+TRX-MTC-000092,2026-05-15,MC-012,Corrective,89,Kalibrasi sensor
+TRX-MTC-000222,2026-05-15,MC-009,Preventive,116,Penggantian sparepart rutin
+TRX-MTC-000330,2026-05-15,MC-002,Breakdown,257,Komponen press macet (high RPM)
+TRX-MTC-000318,2026-05-16,MC-002,Breakdown,290,Stop mendadak - speed tinggi
+TRX-MTC-000377,2026-05-16,MC-002,Breakdown,268,Stop mendadak - speed tinggi
+TRX-MTC-000161,2026-05-16,MC-001,Preventive,123,Perbaikan mendadak
+TRX-MTC-000259,2026-05-17,MC-002,Breakdown,194,Overheat akibat kecepatan tinggi
+TRX-MTC-000279,2026-05-17,MC-002,Breakdown,105,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000273,2026-05-17,MC-002,Breakdown,268,Komponen press macet (high RPM)
+TRX-MTC-000274,2026-05-17,MC-002,Breakdown,294,Komponen press macet (high RPM)
+TRX-MTC-000099,2026-05-17,MC-009,Inspection,176,Inspeksi berkala
+TRX-MTC-000169,2026-05-18,MC-006,Preventive,118,Inspeksi berkala
+TRX-MTC-000344,2026-05-18,MC-002,Breakdown,142,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000242,2026-05-18,MC-009,Breakdown,102,Perbaikan mendadak
+TRX-MTC-000097,2026-05-18,MC-005,Breakdown,31,Pembersihan unit
+TRX-MTC-000200,2026-05-18,MC-012,Preventive,103,Kalibrasi sensor
+TRX-MTC-000342,2026-05-18,MC-002,Breakdown,270,Stop mendadak - speed tinggi
+TRX-MTC-000379,2026-05-19,MC-002,Breakdown,215,Stop mendadak - speed tinggi
+TRX-MTC-000299,2026-05-19,MC-002,Breakdown,207,Stop mendadak - speed tinggi
+TRX-MTC-000357,2026-05-20,MC-002,Breakdown,213,Komponen press macet (high RPM)
+TRX-MTC-000063,2026-05-20,MC-009,Corrective,24,Pembersihan unit
+TRX-MTC-000093,2026-05-20,MC-005,Inspection,111,Kalibrasi sensor
+TRX-MTC-000308,2026-05-20,MC-002,Breakdown,203,Stop mendadak - speed tinggi
+TRX-MTC-000337,2026-05-20,MC-002,Breakdown,210,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000086,2026-05-20,MC-010,Corrective,121,Inspeksi berkala
+TRX-MTC-000301,2026-05-20,MC-002,Breakdown,251,Komponen press macet (high RPM)
+TRX-MTC-000197,2026-05-20,MC-001,Preventive,141,Inspeksi berkala
+TRX-MTC-000070,2026-05-21,MC-002,Inspection,162,Inspeksi berkala
+TRX-MTC-000112,2026-05-22,MC-011,Preventive,176,Penggantian sparepart rutin
+TRX-MTC-000358,2026-05-22,MC-002,Breakdown,154,Overheat akibat kecepatan tinggi
+TRX-MTC-000246,2026-05-22,MC-006,Preventive,92,Inspeksi berkala
+TRX-MTC-000003,2026-05-22,MC-006,Corrective,86,Kalibrasi sensor
+TRX-MTC-000320,2026-05-22,MC-002,Breakdown,127,Komponen press macet (high RPM)
+TRX-MTC-000244,2026-05-22,MC-009,Corrective,91,Kalibrasi sensor
+TRX-MTC-000338,2026-05-23,MC-002,Breakdown,107,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000333,2026-05-23,MC-002,Breakdown,233,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000047,2026-05-23,MC-002,Inspection,22,Inspeksi berkala
+TRX-MTC-000285,2026-05-24,MC-002,Breakdown,113,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000187,2026-05-24,MC-003,Preventive,60,Pembersihan unit
+TRX-MTC-000108,2026-05-24,MC-014,Preventive,56,Pelumasan
+TRX-MTC-000033,2026-05-25,MC-008,Breakdown,87,Inspeksi berkala
+TRX-MTC-000142,2026-05-25,MC-002,Preventive,156,Perbaikan mendadak
+TRX-MTC-000218,2026-05-25,MC-006,Preventive,50,Pembersihan unit
+TRX-MTC-000185,2026-05-25,MC-012,Corrective,65,Pelumasan
+TRX-MTC-000119,2026-05-25,MC-014,Preventive,131,Perbaikan mendadak
+TRX-MTC-000370,2026-05-25,MC-002,Breakdown,138,Overheat akibat kecepatan tinggi
+TRX-MTC-000074,2026-05-26,MC-002,Corrective,34,Penggantian sparepart rutin
+TRX-MTC-000173,2026-05-26,MC-008,Preventive,150,Perbaikan mendadak
+TRX-MTC-000034,2026-05-26,MC-009,Breakdown,153,Pelumasan
+TRX-MTC-000213,2026-05-27,MC-007,Breakdown,50,Penggantian sparepart rutin
+TRX-MTC-000372,2026-05-27,MC-002,Breakdown,175,Komponen press macet (high RPM)
+TRX-MTC-000013,2026-05-27,MC-003,Breakdown,65,Penggantian sparepart rutin
+TRX-MTC-000078,2026-05-28,MC-006,Preventive,34,Inspeksi berkala
+TRX-MTC-000088,2026-05-28,MC-013,Preventive,107,Penggantian sparepart rutin
+TRX-MTC-000178,2026-05-28,MC-007,Preventive,115,Pembersihan unit
+TRX-MTC-000031,2026-05-28,MC-014,Corrective,154,Perbaikan mendadak
+TRX-MTC-000219,2026-05-29,MC-011,Preventive,110,Kalibrasi sensor
+TRX-MTC-000012,2026-05-29,MC-002,Preventive,150,Pembersihan unit
+TRX-MTC-000311,2026-05-30,MC-002,Breakdown,104,Komponen press macet (high RPM)
+TRX-MTC-000005,2026-05-30,MC-012,Preventive,29,Perbaikan mendadak
+TRX-MTC-000198,2026-05-30,MC-003,Inspection,29,Pelumasan
+TRX-MTC-000240,2026-05-30,MC-013,Inspection,59,Inspeksi berkala
+TRX-MTC-000375,2026-05-30,MC-002,Breakdown,199,Overheat akibat kecepatan tinggi
+TRX-MTC-000150,2026-05-31,MC-002,Corrective,133,Pembersihan unit
+TRX-MTC-000029,2026-05-31,MC-008,Corrective,178,Inspeksi berkala
+TRX-MTC-000101,2026-06-01,MC-004,Preventive,93,Pelumasan
+TRX-MTC-000294,2026-06-01,MC-002,Breakdown,227,Komponen press macet (high RPM)
+TRX-MTC-000118,2026-06-01,MC-013,Corrective,24,Inspeksi berkala
+TRX-MTC-000262,2026-06-01,MC-002,Breakdown,172,Komponen press macet (high RPM)
+TRX-MTC-000095,2026-06-02,MC-005,Preventive,61,Pelumasan
+TRX-MTC-000072,2026-06-02,MC-014,Inspection,160,Pelumasan
+TRX-MTC-000241,2026-06-02,MC-002,Inspection,58,Pembersihan unit
+TRX-MTC-000136,2026-06-03,MC-006,Breakdown,128,Pelumasan
+TRX-MTC-000146,2026-06-03,MC-013,Corrective,41,Penggantian sparepart rutin
+TRX-MTC-000109,2026-06-04,MC-007,Corrective,118,Perbaikan mendadak
+TRX-MTC-000020,2026-06-04,MC-013,Breakdown,147,Kalibrasi sensor
+TRX-MTC-000056,2026-06-04,MC-004,Preventive,56,Pelumasan
+TRX-MTC-000104,2026-06-05,MC-008,Preventive,171,Pembersihan unit
+TRX-MTC-000374,2026-06-05,MC-002,Breakdown,101,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000309,2026-06-05,MC-002,Breakdown,122,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000215,2026-06-06,MC-004,Inspection,85,Penggantian sparepart rutin
+TRX-MTC-000353,2026-06-06,MC-002,Breakdown,296,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000017,2026-06-06,MC-004,Breakdown,102,Penggantian sparepart rutin
+TRX-MTC-000319,2026-06-06,MC-002,Breakdown,248,Komponen press macet (high RPM)
+TRX-MTC-000239,2026-06-06,MC-001,Inspection,167,Perbaikan mendadak
+TRX-MTC-000331,2026-06-07,MC-002,Breakdown,252,Stop mendadak - speed tinggi
+TRX-MTC-000314,2026-06-07,MC-002,Breakdown,114,Overheat akibat kecepatan tinggi
+TRX-MTC-000345,2026-06-07,MC-002,Breakdown,115,Overheat akibat kecepatan tinggi
+TRX-MTC-000044,2026-06-07,MC-011,Corrective,78,Kalibrasi sensor
+TRX-MTC-000313,2026-06-07,MC-002,Breakdown,161,Komponen press macet (high RPM)
+TRX-MTC-000085,2026-06-08,MC-004,Preventive,81,Penggantian sparepart rutin
+TRX-MTC-000328,2026-06-09,MC-002,Breakdown,211,Stop mendadak - speed tinggi
+TRX-MTC-000343,2026-06-09,MC-002,Breakdown,94,Komponen press macet (high RPM)
+TRX-MTC-000191,2026-06-09,MC-008,Corrective,175,Inspeksi berkala
+TRX-MTC-000008,2026-06-09,MC-012,Corrective,138,Penggantian sparepart rutin
+TRX-MTC-000232,2026-06-09,MC-001,Preventive,147,Kalibrasi sensor
+TRX-MTC-000132,2026-06-09,MC-007,Corrective,144,Pembersihan unit
+TRX-MTC-000335,2026-06-09,MC-002,Breakdown,208,Overheat akibat kecepatan tinggi
+TRX-MTC-000302,2026-06-09,MC-002,Breakdown,272,Komponen press macet (high RPM)
+TRX-MTC-000351,2026-06-09,MC-002,Breakdown,114,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000336,2026-06-10,MC-002,Breakdown,216,Komponen press macet (high RPM)
+TRX-MTC-000018,2026-06-10,MC-002,Preventive,169,Pelumasan
+TRX-MTC-000004,2026-06-10,MC-003,Preventive,75,Penggantian sparepart rutin
+TRX-MTC-000062,2026-06-10,MC-013,Inspection,114,Penggantian sparepart rutin
+TRX-MTC-000147,2026-06-11,MC-005,Preventive,20,Penggantian sparepart rutin
+TRX-MTC-000340,2026-06-11,MC-002,Breakdown,188,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000305,2026-06-12,MC-002,Breakdown,205,Stop mendadak - speed tinggi
+TRX-MTC-000346,2026-06-12,MC-002,Breakdown,97,Overheat akibat kecepatan tinggi
+TRX-MTC-000356,2026-06-12,MC-002,Breakdown,299,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000023,2026-06-12,MC-003,Preventive,50,Perbaikan mendadak
+TRX-MTC-000263,2026-06-12,MC-002,Breakdown,229,Komponen press macet (high RPM)
+TRX-MTC-000184,2026-06-12,MC-009,Corrective,159,Perbaikan mendadak
+TRX-MTC-000050,2026-06-12,MC-007,Preventive,30,Perbaikan mendadak
+TRX-MTC-000083,2026-06-12,MC-006,Inspection,60,Pelumasan
+TRX-MTC-000060,2026-06-13,MC-009,Corrective,45,Perbaikan mendadak
+TRX-MTC-000214,2026-06-13,MC-009,Preventive,130,Perbaikan mendadak
+TRX-MTC-000249,2026-06-13,MC-012,Preventive,48,Kalibrasi sensor
+TRX-MTC-000271,2026-06-13,MC-002,Breakdown,261,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000211,2026-06-13,MC-007,Preventive,33,Perbaikan mendadak
+TRX-MTC-000046,2026-06-13,MC-003,Corrective,145,Penggantian sparepart rutin
+TRX-MTC-000032,2026-06-14,MC-007,Preventive,76,Pembersihan unit
+TRX-MTC-000252,2026-06-14,MC-002,Breakdown,183,Komponen press macet (high RPM)
+TRX-MTC-000195,2026-06-15,MC-010,Preventive,47,Kalibrasi sensor
+TRX-MTC-000036,2026-06-15,MC-002,Preventive,76,Inspeksi berkala
+TRX-MTC-000167,2026-06-15,MC-014,Inspection,57,Penggantian sparepart rutin
+TRX-MTC-000366,2026-06-15,MC-002,Breakdown,178,Overheat akibat kecepatan tinggi
+TRX-MTC-000257,2026-06-16,MC-002,Breakdown,165,Overheat akibat kecepatan tinggi
+TRX-MTC-000221,2026-06-16,MC-004,Preventive,121,Pelumasan
+TRX-MTC-000154,2026-06-16,MC-005,Breakdown,138,Pelumasan
+TRX-MTC-000039,2026-06-16,MC-011,Preventive,140,Inspeksi berkala
+TRX-MTC-000155,2026-06-17,MC-011,Corrective,31,Perbaikan mendadak
+TRX-MTC-000378,2026-06-17,MC-002,Breakdown,139,Komponen press macet (high RPM)
+TRX-MTC-000233,2026-06-17,MC-005,Preventive,163,Pelumasan
+TRX-MTC-000329,2026-06-17,MC-002,Breakdown,140,Komponen press macet (high RPM)
+TRX-MTC-000019,2026-06-17,MC-002,Breakdown,145,Pelumasan
+TRX-MTC-000164,2026-06-18,MC-003,Preventive,85,Inspeksi berkala
+TRX-MTC-000369,2026-06-18,MC-002,Breakdown,136,Komponen press macet (high RPM)
+TRX-MTC-000324,2026-06-18,MC-002,Breakdown,178,Overheat akibat kecepatan tinggi
+TRX-MTC-000201,2026-06-19,MC-002,Inspection,107,Kalibrasi sensor
+TRX-MTC-000253,2026-06-19,MC-002,Breakdown,157,Stop mendadak - speed tinggi
+TRX-MTC-000006,2026-06-19,MC-012,Corrective,168,Inspeksi berkala
+TRX-MTC-000010,2026-06-19,MC-004,Corrective,171,Pelumasan
+TRX-MTC-000079,2026-06-19,MC-010,Corrective,72,Pelumasan
+TRX-MTC-000268,2026-06-19,MC-002,Breakdown,232,Overheat akibat kecepatan tinggi
+TRX-MTC-000325,2026-06-19,MC-002,Breakdown,148,Stop mendadak - speed tinggi
+TRX-MTC-000248,2026-06-20,MC-003,Corrective,151,Kalibrasi sensor
+TRX-MTC-000295,2026-06-20,MC-002,Breakdown,137,Overheat akibat kecepatan tinggi
+TRX-MTC-000151,2026-06-20,MC-005,Preventive,152,Perbaikan mendadak
+TRX-MTC-000269,2026-06-20,MC-002,Breakdown,226,Overheat akibat kecepatan tinggi
+TRX-MTC-000365,2026-06-20,MC-002,Breakdown,270,Komponen press macet (high RPM)
+TRX-MTC-000171,2026-06-21,MC-005,Corrective,74,Kalibrasi sensor
+TRX-MTC-000048,2026-06-21,MC-008,Preventive,125,Kalibrasi sensor
+TRX-MTC-000363,2026-06-22,MC-002,Breakdown,157,Stop mendadak - speed tinggi
+TRX-MTC-000040,2026-06-22,MC-011,Preventive,141,Pembersihan unit
+TRX-MTC-000052,2026-06-23,MC-003,Breakdown,154,Kalibrasi sensor
+TRX-MTC-000077,2026-06-24,MC-010,Preventive,51,Inspeksi berkala
+TRX-MTC-000113,2026-06-24,MC-007,Corrective,36,Inspeksi berkala
+TRX-MTC-000203,2026-06-24,MC-001,Corrective,130,Pembersihan unit
+TRX-MTC-000275,2026-06-25,MC-002,Breakdown,290,Getaran berlebih saat speed >1500rpm
+TRX-MTC-000272,2026-06-25,MC-002,Breakdown,208,Komponen press macet (high RPM)
+TRX-MTC-000051,2026-06-25,MC-001,Corrective,85,Perbaikan mendadak
+TRX-MTC-000188,2026-06-25,MC-008,Preventive,36,Perbaikan mendadak
+TRX-MTC-000011,2026-06-25,MC-007,Breakdown,87,Perbaikan mendadak
+TRX-MTC-000300,2026-06-25,MC-002,Breakdown,174,Stop mendadak - speed tinggi
+TRX-MTC-000284,2026-06-25,MC-002,Breakdown,251,Overheat akibat kecepatan tinggi
+TRX-MTC-000135,2026-06-26,MC-008,Preventive,96,Inspeksi berkala
+TRX-MTC-000156,2026-06-26,MC-006,Preventive,29,Pelumasan
+TRX-MTC-000341,2026-06-26,MC-002,Breakdown,182,Stop mendadak - speed tinggi

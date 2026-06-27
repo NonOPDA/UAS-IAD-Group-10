@@ -1,0 +1,15 @@
+ID_Material,Nama_Material,Kategori,Satuan,Supplier,Harga_Per_Unit
+MAT-001,Steel Coil SPCC,Raw Material,KG,UD Hasanah Suwarno Tbk,59308.32
+MAT-002,steel coil sphc,Raw Material,KG,CV Nainggolan Sihombing (Persero) Tbk,142853.57
+MAT-003,Aluminum Sheet 6061,Raw Material,KG,Perum Namaga,111139.12
+MAT-004,Plastic Resin ABS,Raw Material,KG,UD Hakim,91805.48
+MAT-005,plastic resin pp,rawmaterial,KG,Perum Kuswandari,27622.7
+MAT-006,Paint Primer Grey,Consumable,LITER,PT Melani Hutapea,27619.21
+MAT-007,Paint Top Coat Black,Consumable,LITER,PT Riyanti Hidayat,13422.12
+MAT-008,Welding Wire CO2,Consumable,ROLL,PD Lazuardi Purnawati,130595.54
+MAT-009,Bolt M8x20,Component,PCS,Perum Riyanti Gunarto,92161.68
+MAT-010, Bolt M10x25 ,Component,PCS,PD Wahyuni,107670.52
+MAT-011,Bracket Assembly A1,Component,PCS,UD Putra Tbk,7984.75
+MAT-012,Rubber Gasket Std,Component,PCS,UD Widodo Mustofa,145636.93
+MAT-013,Lubricant Oil SAE-40,Consumable,LITER,PD Sihotang (Persero) Tbk,125704.18
+MAT-014,Wiring Harness Set,Component,SET,PD Oktaviani,35789.17

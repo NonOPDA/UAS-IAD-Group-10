@@ -1,0 +1,15 @@
+ID_Mesin,Nama_Mesin,Line_Produksi,Tipe_Mesin,Tahun_Install,Tanggal_Install,Kapasitas_Max_RPM,Lokasi_Pabrik,Status_Aktif
+MC-001,Press_01,Stamping,CNC,2022,2022-12-15,1000,Plant 1 - Cikarang,Aktif
+MC-002,Press-02,Stamping,Robotic,2018,2018-08-27,800,Plant 2 - Bekasi,Aktif
+MC-003,Press  03,STAMPING,Robotic,2020,2020-05-27,1800,Plant 1 - Cikarang,Aktif
+MC-004,Blanking-01,Stamping,Manual,2020,2020-01-16,1000,Plant 2 - Bekasi,Aktif
+MC-005,Robot_Weld_01,Welding,Mechanical,2023,2023-08-20,2000,Plant 2 - Bekasi,Aktif
+MC-006,Robot  Weld  02, welding ,CNC,2023,2023-03-20,800,Plant 1 - Cikarang,Non-Aktif
+MC-007,Spot-Weld-01,WELDING,Robotic,2024,2024-09-21,1200,Plant 1 - Cikarang,Non-Aktif
+MC-008,Paint-Booth-01,Painting,Manual,2019,2019-02-02,800,Plant 2 - Bekasi,Aktif
+MC-009,Paint-Booth-02,Painting,Hydraulic,2021,2021-06-07,2000,Plant 1 - Cikarang,Aktif
+MC-010,Assy-Line-01,Assembly,Hydraulic,2018,2018-09-09,1500,Plant 2 - Bekasi,Non-Aktif
+MC-011,Assy-Line-02,Assembly,CNC,2020,2020-01-04,1200,Plant 1 - Cikarang,Aktif
+MC-012,Assy-Line-03,Assembly,Hydraulic,2022,2022-01-06,1800,Plant 1 - Cikarang,Aktif
+MC-013,Injection-01, injection ,Robotic,2018,2018-08-31,1000,Plant 2 - Bekasi,Aktif
+MC-014,Injection_02, injection ,CNC,2019,2019-11-15,1500,Plant 2 - Bekasi,Aktif

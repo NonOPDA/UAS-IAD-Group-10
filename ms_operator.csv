@@ -1,0 +1,61 @@
+ID_Operator,Nama_Operator,Skill_Level,Shift_Default,Tanggal_Bergabung,Departemen
+OP-001,"  Nardi Palastri, S.Farm  ",5,Shift B,2018-09-07,Maintenance
+OP-002,Tgk. Yessi Ardianto,5,SHIFT B,2024-01-25,Produksi
+OP-003,Nalar Anggraini,3,Shift B,2019-11-18,produksi
+OP-004,Darijan Sirait,1,Shift A,2017-07-02,produksi
+OP-005,Cinta Tamba,3,Shift B,2024-12-14,Maintenance
+OP-006,Tgk. Yani Gunawan,5,Shift A,2023-10-10,Produksi
+OP-007,R. Virman Waluyo,3,Shift C,2017-04-07,Produksi
+OP-008,Yance Utami,3,Shift C,2022-08-30,produksi
+OP-009,"dr. Ratih Nababan, S.Pt",1,Shift C,2016-12-08,produksi
+OP-010,prasetyo siregar,4,Shift C,2026-05-01,Produksi
+OP-011,"R.A. Zelaya Januar, S.Sos",1,Shift B,2019-04-05,produksi
+OP-012,"Rafid Utama, S.E.",5.0,Shift B,2020-03-06,produksi
+OP-013,mumpuni santoso,3,Shift B,2023-07-01,Maintenance
+OP-014,"Marsudi Hidayanto, M.Ak",5,Shift C,2022-10-29,Produksi
+OP-015,H. Dipa Marpaung,4,Shift C,2021-02-06,produksi
+OP-016,  Suci Puspita  ,2,Shift A,2018-09-04,Produksi
+OP-017,ZAENAB HAKIM,3,Shift A,2018-10-08,Produksi
+OP-018,Reksa Sihotang,2,SHIFT C,2020-06-28,Maintenance
+OP-019,  Danuja Purnawati  ,3,shift_A,2025-03-29,Maintenance
+OP-020,Gabriella Yolanda,3,Shift A,2021-06-21,Produksi
+OP-021,"JAGAPATI MEGANTARA, S.T.",4,Shift A,2017-11-15,produksi
+OP-022,"Putri Nasyiah, S.T.",1,Shift B,2023-12-13,Produksi
+OP-023,Restu Wacana,5,Shift A,2020-02-06,Produksi
+OP-024,Kacung Lailasari,5,Shift A,2017-05-22,Maintenance
+OP-025,  Satya Kusumo  ,3,shift_B,2018-01-03,Maintenance
+OP-026,Prima Zulaika,4,Shift B,2020-09-12,Maintenance
+OP-027,harsana wibowo,2,Shift C,2022-06-09,Produksi
+OP-028,Paris Ramadan,1,Shift C,2026-03-10,produksi
+OP-029,"CUT SABRINA LATUPONO, M.PD",3,Shift A,2023-12-27,produksi
+OP-030,"Ir. Ganep Kusumo, S.Pd",5,Shift C,2020-10-28,Produksi
+OP-031,Ade Saptono,3,Shift B,2026-03-13,Produksi
+OP-032,"  R.M. Jono Kurniawan, S.Pd  ",3,Shift B,2024-11-22,Produksi
+OP-033,DRS. DALIMIN MANGUNSONG,3,shift_A,2020-03-20,produksi
+OP-034,Kayun Nuraini,1,Shift A,2025-08-30,Produksi
+OP-035,dr. Nurul Budiyanto,3,Shift B,2017-08-06,Produksi
+OP-036,Yance Samosir,3,Shift A,2018-11-15,produksi
+OP-037,Tomi Purnawati,5,Shift A,2025-12-12,produksi
+OP-038,Opan Laksita,2,Shift B,2024-08-21,Produksi
+OP-039,"Dr. Pranata Mahendra, S.E.I",4.0,Shift B,2023-01-28,Produksi
+OP-040,R.M. EMAN NURAINI,4,Shift B,2025-03-15,Maintenance
+OP-041,Gabriella Namaga,3,Shift A,2024-01-12,produksi
+OP-042,"Farah Saragih, S.Sos",4,Shift A,2026-06-06,Produksi
+OP-043,"Hardi Farida, M.TI.",5,Shift A,2020-12-28,produksi
+OP-044,Darmanto Haryanto,4,Shift C,2019-11-10,Maintenance
+OP-045,Drs. Ghaliyati Rahmawati,4,Shift A,2018-09-06,produksi
+OP-046,Nugraha Usamah,1,Shift B,2017-01-25,Maintenance
+OP-047,Utama Firmansyah,5,Shift B,2025-01-27,Produksi
+OP-048,Kamidin Prakasa,1,Shift A,2019-04-06,Maintenance
+OP-049,Gabriella Namaga,4,shift_A,2017-10-20,produksi
+OP-050,Ir. Nabila Prasasta,2,Shift B,2024-04-28,Maintenance
+OP-051,"dr. Dadap Kuswoyo, S.IP",4,SHIFT A,2023-01-25,Produksi
+OP-052,lintang zulkarnain,5,Shift A,2021-02-23,Produksi
+OP-053,"Anastasia Wulandari, S.IP",2,SHIFT C,2017-01-31,produksi
+OP-054,"Jessica Kurniawan, S.H.",4,Shift C,2018-05-24,produksi
+OP-055,drg. Cahyono Anggraini,1,Shift B,2018-04-25,Produksi
+OP-056,Hilda Hutagalung,2,Shift B,2020-11-28,Produksi
+OP-057,"Drs. Cinthia Hardiansyah, M.Pd",2,Shift B,2024-11-02,produksi
+OP-058,Wira Prakasa,2,Shift A,2018-02-21,produksi
+OP-059,Novi Prabowo,3,Shift B,2025-02-14,produksi
+OP-060,Catur Wibowo,4,Shift C,2016-07-01,Produksi
